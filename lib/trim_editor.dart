@@ -300,7 +300,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         print(details.localPosition);
         print((_startPos.dx - details.localPosition.dx).abs());
         print((_endPos.dx - details.localPosition.dx).abs());
-
+        print((_endPos.dx - _startPos.dx).abs());
         if (_endPos.dx >= _startPos.dx) {
           if ((_startPos.dx - details.localPosition.dx).abs() >
               (_endPos.dx - details.localPosition.dx).abs()) {
