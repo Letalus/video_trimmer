@@ -328,7 +328,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         print("UPDATE");
         print("START POINT: ${_startPos.dx + details.delta.dx}");
         print("END POINT: ${_endPos.dx + details.delta.dx}");
-        print("Duration: ${(_endPos.dx - _startPos.dx).abs()}");
+        print("Duration: ${details.delta.dx}");
 
         _circleSize = widget.circleSizeOnDrag;
 
