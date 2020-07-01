@@ -368,6 +368,12 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
                                 .toString()
                                 .split('.')[0],
                             style: widget.durationTextStyle),
+                                                Text(
+                            Duration(milliseconds:_videoEndPos.toInt() - _videoStartPos.toInt())
+                                .toString()
+                                .split('.')[0],
+                            style: widget.durationTextStyle),
+                        
                         Text(
                           Duration(milliseconds: _videoEndPos.toInt())
                               .toString()
