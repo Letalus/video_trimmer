@@ -63,7 +63,7 @@ class TrimEditorPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    var whitePaint = Paint()..strokeWidth = 1..color = Colors.white;
+    var whitePaint = Paint()..strokeWidth = 1.5..color = Colors.white..style = PaintingStyle.stroke..strokeCap = StrokeCap.round;
 
     final rect = RRect.fromRectXY(Rect.fromPoints(startPos, endPos),10,10);
     final _leftRRect = RRect.fromLTRBAndCorners(startPos.dx, 0, startPos.dx+smallRectWidth, endPos.dy, topLeft: Radius.circular(borderRadius), bottomLeft: Radius.circular(borderRadius));
