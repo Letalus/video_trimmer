@@ -51,7 +51,7 @@ class ThumbnailViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     print('thumbNailWidth factor ${(width/(thumbnailHeight*numberOfThumbnails))}');
     double _widthfactor = width/(thumbnailHeight*numberOfThumbnails);
-    assert(_widthfactor<0, 'widthfactor must be greater than 0');
+    assert(_widthfactor>0, 'widthfactor must be greater than 0');
     return StreamBuilder(
       stream: generateThumbnail(),
       builder: (context, snapshot) {
