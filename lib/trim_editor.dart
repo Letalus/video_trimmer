@@ -294,22 +294,26 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
                   ),
                 )
               : Container(),
-          CustomPaint(
-            foregroundPainter: TrimEditorPainter(
-              startPos: _startPos,
-              endPos: _endPos,
-              scrubberAnimationDx: _scrubberAnimation.value,
-              circleSize: _circleSize,
-              circlePaintColor: widget.circlePaintColor,
-              borderPaintColor: widget.borderPaintColor,
-              scrubberPaintColor: widget.scrubberPaintColor,
-              videoPlayerController: videoPlayerController
-            ),
-            child: Container(
-              color: Colors.grey[900],
-              height: _thumbnailViewerH,
-              width: _thumbnailViewerW,
-              child: thumbnailWidget == null ? Column() : thumbnailWidget,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: CustomPaint(
+              foregroundPainter: TrimEditorPainter(
+                borderRadius: 10,
+                startPos: _startPos,
+                endPos: _endPos,
+                scrubberAnimationDx: _scrubberAnimation.value,
+                circleSize: _circleSize,
+                circlePaintColor: widget.circlePaintColor,
+                borderPaintColor: widget.borderPaintColor,
+                scrubberPaintColor: widget.scrubberPaintColor,
+                videoPlayerController: videoPlayerController
+              ),
+              child: Container(
+                color: Colors.grey[900],
+                height: _thumbnailViewerH,
+                width: _thumbnailViewerW,
+                child: thumbnailWidget == null ? Column() : thumbnailWidget,
+              ),
             ),
           ),
         ],
