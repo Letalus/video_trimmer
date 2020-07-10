@@ -7,7 +7,7 @@ import 'package:video_trimmer/trim_editor_painter.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 
 class TrimEditor extends StatefulWidget {
-  final double viewerWidth;
+  final double viewerWidthMinusPadding;
   final double viewerHeight;
   final double circleSize;
   final double circleSizeOnDrag;
@@ -28,9 +28,9 @@ class TrimEditor extends StatefulWidget {
   /// slider for selecting the part of the video to be
   /// trimmed.
   ///
-  /// The required parameters are [viewerWidth] & [viewerHeight]
+  /// The required parameters are [viewerWidthMinusPadding] & [viewerHeight]
   ///
-  /// * [viewerWidth] to define the total trimmer area width.
+  /// * [viewerWidthMinusPadding] to define the total trimmer area width.
   ///
   ///
   /// * [viewerHeight] to define the total trimmer area height.
@@ -85,7 +85,7 @@ class TrimEditor extends StatefulWidget {
   /// state to know whether it is currently playing or paused.
   ///
   TrimEditor(this.videoPlayerController,{
-    @required this.viewerWidth,
+    @required this.viewerWidthMinusPadding,
     @required this.viewerHeight,
     this.circleSize = 5.0,
     this.circleSizeOnDrag = 8.0,
@@ -100,7 +100,7 @@ class TrimEditor extends StatefulWidget {
     this.onChangeStart,
     this.onChangeEnd,
     this.onChangePlaybackState,
-  })  : assert(viewerWidth != null),
+  })  : assert(viewerWidthMinusPadding != null),
         assert(viewerHeight != null),
         assert(circleSize != null),
         assert(circleSizeOnDrag != null),
@@ -136,7 +136,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
   double _thumbnailViewerW = 0.0;
   double _thumbnailViewerH = 0.0;
 
-  int _numberOfThumbnails = 0;
+  int _numberOfThumbnails = 8;
 
   double _circleSize;
 
@@ -156,8 +156,8 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
     _videoFile = Trimmer.currentVideoFile;
     _thumbnailViewerH = widget.viewerHeight;
 
-    _numberOfThumbnails = widget.viewerWidth ~/ _thumbnailViewerH;
-    _thumbnailViewerW = widget.viewerWidth;
+    _numberOfThumbnails = 8;
+    _thumbnailViewerW = widget.viewerWidthMinusPadding;
 
     _endPos = Offset(_thumbnailViewerW, _thumbnailViewerH);
     _initializeVideoController();
@@ -186,6 +186,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
       videoDuration: _videoDuration,
       thumbnailHeight: _thumbnailViewerH,
       numberOfThumbnails: _numberOfThumbnails,
+      width: widget.viewerWidthMinusPadding,
       quality: widget.thumbnailQuality,
     );
   }

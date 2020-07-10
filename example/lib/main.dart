@@ -104,8 +104,8 @@ class _HomePageState extends State<HomePage> {
                 _trimmer!=null?Center(
                   child: TrimEditor(
                     _trimmer.videoPlayerController,
-                    viewerHeight: 50.0,
-                    viewerWidth: MediaQuery.of(context).size.width,
+                    viewerHeight: 70.0,
+                    viewerWidthMinusPadding: MediaQuery.of(context).size.width,
                     onChangeStart: (value) {
                       _startValue = value;
                     },

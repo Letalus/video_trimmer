@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ class ThumbnailViewer extends StatelessWidget {
   final videoFile;
   final videoDuration;
   final thumbnailHeight;
+  final double width;
   final int numberOfThumbnails;
   final int quality;
 
@@ -15,6 +17,7 @@ class ThumbnailViewer extends StatelessWidget {
     @required this.videoDuration,
     @required this.thumbnailHeight,
     @required this.numberOfThumbnails,
+    @required this.width,
     this.quality = 75,
   })  : assert(videoFile != null),
         assert(videoDuration != null),
@@ -46,24 +49,35 @@ class ThumbnailViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('thumbNailWidth factor ${(width/(thumbnailHeight*numberOfThumbnails))}');
+    double _widthfactor = width/(thumbnailHeight*numberOfThumbnails);
+    assert(_widthfactor<0, 'widthfactor must be greater than 0');
     return StreamBuilder(
       stream: generateThumbnail(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Uint8List> _imageBytes = snapshot.data;
-          return ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  height: thumbnailHeight,
-                  width: thumbnailHeight,
-                  child: Image(
-                    image: MemoryImage(_imageBytes[index]),
-                    fit: BoxFit.fitHeight,
-                  ),
-                );
-              });
+          return SizedBox(
+            width: width,
+            height: thumbnailHeight,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data.length,
+                itemBuilder: (context, index) {
+                  return Align(
+                    widthFactor: (_widthfactor),
+                    child: Container(
+                      height: thumbnailHeight,
+                      width: thumbnailHeight,
+                      child: Image(
+                        image: MemoryImage(_imageBytes[index]),
+                        fit: BoxFit.cover,
+                        alignment: Alignment.centerRight,
+                      ),
+                    ),
+                  );
+                }),
+          );
         } else {
           return Container(
             color: Colors.grey[900],

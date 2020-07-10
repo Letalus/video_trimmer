@@ -68,8 +68,8 @@ class TrimEditorPainter extends CustomPainter {
     final rect = RRect.fromRectXY(Rect.fromPoints(startPos, endPos),10,10);
     final _leftRRect = RRect.fromLTRBAndCorners(startPos.dx, 0, startPos.dx+smallRectWidth, endPos.dy, topLeft: Radius.circular(borderRadius), bottomLeft: Radius.circular(borderRadius));
     final _rightRRect = RRect.fromLTRBAndCorners(endPos.dx, 0, endPos.dx-smallRectWidth, endPos.dy, topRight: Radius.circular(borderRadius), bottomRight: Radius.circular(borderRadius));
-    final _leftInsideRRect = RRect.fromLTRBAndCorners(startPos.dx+smallRectWidth*.4,  endPos.dy*.25, startPos.dx+smallRectWidth*.6, endPos.dy*.75, topLeft: Radius.circular(1), bottomLeft: Radius.circular(1));
-    final _rightInsideRRect = RRect.fromLTRBAndCorners(endPos.dx-smallRectWidth*.4,  endPos.dy*.25, endPos.dx-smallRectWidth*.6, endPos.dy*.75, topRight: Radius.circular(1), bottomRight: Radius.circular(1));
+    final _leftInsideRRect = RRect.fromLTRBAndCorners(startPos.dx+smallRectWidth*.4,  endPos.dy*.3, startPos.dx+smallRectWidth*.6, endPos.dy*.7, topLeft: Radius.circular(1), bottomLeft: Radius.circular(1));
+    final _rightInsideRRect = RRect.fromLTRBAndCorners(endPos.dx-smallRectWidth*.4,  endPos.dy*.3, endPos.dx-smallRectWidth*.6, endPos.dy*.7, topRight: Radius.circular(1), bottomRight: Radius.circular(1));
 
     final _leftBackgroundRect = Rect.fromLTRB(0, 0, startPos.dx+smallRectWidth, endPos.dy);
     final _rightBackgroundRect = Rect.fromLTRB(size.width, 0, endPos.dx-smallRectWidth, endPos.dy);
