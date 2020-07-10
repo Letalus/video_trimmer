@@ -19,30 +19,21 @@ import 'package:video_trimmer/trim_editor.dart';
 /// * [saveTrimmedVideo()]
 /// * [videPlaybackControl()]
 class Trimmer {
+  VideoPlayerController videoPlayerController;
+  final File videoFile;
   static File currentVideoFile;
 
   final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
 
+  Trimmer(this.videoFile) {
+    videoPlayerController = VideoPlayerController.file(videoFile);
+  }
+
   /// Loads a video using the path provided.
-  ///
   /// Returns the loaded video file.
-  Future<void> loadVideo({@required File videoFile}) async {
+  Future<void> loadVideo() async {
     currentVideoFile = videoFile;
-    if (currentVideoFile != null) {
-      videoPlayerController = VideoPlayerController.file(currentVideoFile);
-      await videoPlayerController.initialize().then((_) {
-        TrimEditor(
-          viewerHeight: 50,
-          viewerWidth: 50.0 * 8,
-          // currentVideoFile: currentVideoFile,
-        );
-      });
-      // TrimEditor(
-      //   viewerHeight: 50,
-      //   viewerWidth: 50.0 * 8,
-      //   // currentVideoFile: currentVideoFile,
-      // );
-    }
+    await videoPlayerController.initialize();
   }
 
   Future<String> _createFolderInAppDocDir(
@@ -70,8 +61,7 @@ class Trimmer {
     }
 
     // Directory + folder name
-    final Directory _directoryFolder =
-        Directory('${_directory.path}/$folderName/');
+    final Directory _directoryFolder = Directory('${_directory.path}/$folderName/');
 
     if (await _directoryFolder.exists()) {
       // If folder already exists return path
@@ -80,8 +70,7 @@ class Trimmer {
     } else {
       print('Creating');
       // If folder does not exists create folder and then return its path
-      final Directory _directoryNewFolder =
-          await _directoryFolder.create(recursive: true);
+      final Directory _directoryNewFolder = await _directoryFolder.create(recursive: true);
       return _directoryNewFolder.path;
     }
   }
@@ -166,11 +155,7 @@ class Trimmer {
     String _command;
 
     // Formatting Date and Time
-    String dateTime = DateFormat.yMMMd()
-        .addPattern('-')
-        .add_Hms()
-        .format(DateTime.now())
-        .toString();
+    String dateTime = DateFormat.yMMMd().addPattern('-').add_Hms().format(DateTime.now()).toString();
 
     // String _resultString;
     String _outputPath;
@@ -269,10 +254,8 @@ class Trimmer {
       await videoPlayerController.pause();
       return false;
     } else {
-      if (videoPlayerController.value.position.inMilliseconds >=
-          endValue.toInt()) {
-        await videoPlayerController
-            .seekTo(Duration(milliseconds: startValue.toInt()));
+      if (videoPlayerController.value.position.inMilliseconds >= endValue.toInt()) {
+        await videoPlayerController.seekTo(Duration(milliseconds: startValue.toInt()));
         await videoPlayerController.play();
         return true;
       } else {

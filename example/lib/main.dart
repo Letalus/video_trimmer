@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:video_trimmer/trim_editor.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 import 'package:video_trimmer/video_viewer.dart';
+import 'package:video_player/video_player.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,68 +22,36 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
-  final Trimmer _trimmer = Trimmer();
+class HomePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Video Trimmer"),
-      ),
-      body: Center(
-        child: Container(
-          child: RaisedButton(
-            child: Text("LOAD VIDEO"),
-            onPressed: () async {
-              File file = await ImagePicker.pickVideo(
-                source: ImageSource.gallery,
-              );
-              if (file != null) {
-                await _trimmer.loadVideo(videoFile: file);
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return TrimmerView(_trimmer);
-                }));
-              }
-            },
-          ),
-        ),
-      ),
-    );
-  }
+  _HomePageState createState() => _HomePageState();
 }
 
-class TrimmerView extends StatefulWidget {
-  final Trimmer _trimmer;
-  TrimmerView(this._trimmer);
-  @override
-  _TrimmerViewState createState() => _TrimmerViewState();
-}
-
-class _TrimmerViewState extends State<TrimmerView> {
+class _HomePageState extends State<HomePage> {
+   Trimmer _trimmer;
+  
   double _startValue = 0.0;
   double _endValue = 0.0;
 
   bool _isPlaying = false;
   bool _progressVisibility = false;
-
-  Future<String> _saveVideo() async {
-    setState(() {
-      _progressVisibility = true;
-    });
-
-    String _value;
-
-    await widget._trimmer
-        .saveTrimmedVideo(startValue: _startValue, endValue: _endValue)
-        .then((value) {
+  File _videoFile = File('/data/user/0/com.example.example/cache/image_picker1717731443242073867.jpg');
+  
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 0),()async{
+      _trimmer = Trimmer(_videoFile);
+      await _trimmer.loadVideo();
       setState(() {
-        _progressVisibility = false;
-        _value = value;
+
+      });
+      Future.delayed(Duration(milliseconds: 300),(){
+        setState(() {
+
+        });
       });
     });
-
-    return _value;
   }
 
   @override
@@ -100,29 +69,41 @@ class _TrimmerViewState extends State<TrimmerView> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Visibility(
-                  visible: _progressVisibility,
-                  child: LinearProgressIndicator(
-                    backgroundColor: Colors.red,
-                  ),
-                ),
                 RaisedButton(
                   onPressed: _progressVisibility
                       ? null
                       : () async {
-                          _saveVideo().then((outputPath) {
-                            print('OUTPUT PATH: $outputPath');
-                            final snackBar = SnackBar(content: Text('Video Saved successfully'));
-                            Scaffold.of(context).showSnackBar(snackBar);
-                          });
-                        },
-                  child: Text("SAVE"),
+                      Future.delayed(Duration(milliseconds: 200),(){
+                        _trimmer?.videoPlayerController?.dispose();
+                      });
+
+                    setState(() {
+                      _trimmer = null;
+                    });
+                    File file = await ImagePicker.pickVideo(
+                      source: ImageSource.gallery,
+                    );
+                    if (file != null) {
+                      _trimmer = Trimmer(file);
+                      await _trimmer.loadVideo();
+                      setState(() {
+
+                      });
+                      Future.delayed(Duration(milliseconds: 300),(){
+                        setState(() {
+
+                        });
+                      });
+                    }
+                  },
+                  child: Text("Get Other image"),
                 ),
                 Expanded(
-                  child: VideoViewer(),
+                  child: (_trimmer!=null&&_trimmer.videoPlayerController!=null)?VideoViewer(_trimmer.videoPlayerController):Container(),
                 ),
-                Center(
+                _trimmer!=null?Center(
                   child: TrimEditor(
+                    _trimmer.videoPlayerController,
                     viewerHeight: 50.0,
                     viewerWidth: MediaQuery.of(context).size.width,
                     onChangeStart: (value) {
@@ -132,27 +113,30 @@ class _TrimmerViewState extends State<TrimmerView> {
                       _endValue = value;
                     },
                     onChangePlaybackState: (value) {
-                      setState(() {
-                        _isPlaying = value;
-                      });
+                      if(context!=null){
+                        setState(() {
+                          _isPlaying = value;
+                        });
+
+                      }
                     },
                   ),
-                ),
+                ):Container(),
                 FlatButton(
                   child: _isPlaying
                       ? Icon(
-                          Icons.pause,
-                          size: 80.0,
-                          color: Colors.white,
-                        )
+                    Icons.pause,
+                    size: 80.0,
+                    color: Colors.white,
+                  )
                       : Icon(
-                          Icons.play_arrow,
-                          size: 80.0,
-                          color: Colors.white,
-                        ),
+                    Icons.play_arrow,
+                    size: 80.0,
+                    color: Colors.white,
+                  ),
                   onPressed: () async {
                     bool playbackState =
-                        await widget._trimmer.videPlaybackControl(
+                    await _trimmer.videPlaybackControl(
                       startValue: _startValue,
                       endValue: _endValue,
                     );
@@ -169,3 +153,4 @@ class _TrimmerViewState extends State<TrimmerView> {
     );
   }
 }
+

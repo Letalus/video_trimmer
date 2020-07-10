@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 class TrimEditorPainter extends CustomPainter {
   final Offset startPos;
@@ -11,6 +12,7 @@ class TrimEditorPainter extends CustomPainter {
   final Color borderPaintColor;
   final Color circlePaintColor;
   final Color scrubberPaintColor;
+  final VideoPlayerController videoPlayerController;
   TrimEditorPainter({
     @required this.startPos,
     @required this.endPos,
@@ -22,6 +24,7 @@ class TrimEditorPainter extends CustomPainter {
     this.borderPaintColor = Colors.white,
     this.circlePaintColor = Colors.white,
     this.scrubberPaintColor = Colors.white,
+    this.videoPlayerController
   })  : assert(startPos != null),
         assert(endPos != null),
         assert(scrubberAnimationDx != null),
