@@ -17,6 +17,7 @@ class TrimEditor extends StatefulWidget {
   final int thumbnailQuality;
   final bool showDuration;
   final TextStyle durationTextStyle;
+  final int numberOfThumbNail;
   final Function(double startValue) onChangeStart;
   final Function(double endValue) onChangeEnd;
   final Function(bool isPlaying) onChangePlaybackState;
@@ -94,6 +95,7 @@ class TrimEditor extends StatefulWidget {
     this.scrubberPaintColor = Colors.white,
     this.thumbnailQuality = 75,
     this.showDuration = true,
+    this.numberOfThumbNail = 8,
     this.durationTextStyle = const TextStyle(
       color: Colors.white,
     ),
@@ -136,8 +138,6 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
   double _thumbnailViewerW = 0.0;
   double _thumbnailViewerH = 0.0;
 
-  int _numberOfThumbnails = 8;
-
   double _circleSize;
 
   ThumbnailViewer thumbnailWidget;
@@ -156,7 +156,6 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
     _videoFile = Trimmer.currentVideoFile;
     _thumbnailViewerH = widget.viewerHeight;
 
-    _numberOfThumbnails = 8;
     _thumbnailViewerW = widget.viewerWidthMinusPadding;
 
     _endPos = Offset(_thumbnailViewerW, _thumbnailViewerH);
@@ -185,7 +184,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
       videoFile: _videoFile,
       videoDuration: _videoDuration,
       thumbnailHeight: _thumbnailViewerH,
-      numberOfThumbnails: _numberOfThumbnails,
+      numberOfThumbnails: widget.numberOfThumbNail,
       width: widget.viewerWidthMinusPadding,
       quality: widget.thumbnailQuality,
     );
