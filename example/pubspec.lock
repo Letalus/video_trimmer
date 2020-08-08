@@ -266,8 +266,8 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: adb615f79fce8d37b8b37f55c2ba1ad3b13aa13e
-      url: "https://github.com/Letalus/videoPlayerWithHeader.git"
+      resolved-ref: "2abcb3696c54d2a3235e6f9700ea3f17dd828ce6"
+      url: "https://github.com/mertcankirtay/videoPlayerWithHeader.git"
     source: git
     version: "0.10.2+4"
   video_thumbnail:

@@ -19,14 +19,14 @@ import 'package:video_trimmer/trim_editor.dart';
 /// * [saveTrimmedVideo()]
 /// * [videPlaybackControl()]
 class Trimmer {
-  VideoPlayHeaderController videoPlayerController;
+  VideoPlayerController videoPlayerController;
   final File videoFile;
   static File currentVideoFile;
 
   final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
 
   Trimmer(this.videoFile) {
-    videoPlayerController = VideoPlayHeaderController.file(videoFile);
+    videoPlayerController = VideoPlayerController.file(videoFile);
   }
 
   /// Loads a video using the path provided.

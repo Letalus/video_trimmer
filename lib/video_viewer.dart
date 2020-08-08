@@ -6,7 +6,7 @@ class VideoViewer extends StatelessWidget {
   final Color borderColor;
   final double borderWidth;
   final EdgeInsets padding;
-  final VideoPlayHeaderController videoPlayerController;
+  final VideoPlayerController videoPlayerController;
 
   /// For showing the video playback area.
   ///
