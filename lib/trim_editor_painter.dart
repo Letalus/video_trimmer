@@ -13,7 +13,7 @@ class TrimEditorPainter extends CustomPainter {
   final Color circlePaintColor;
   final Color scrubberPaintColor;
   final double borderRadius;
-  final VideoPlayerController videoPlayerController;
+  final VideoPlayHeaderController videoPlayerController;
   final double smallRectWidth;
   TrimEditorPainter({
     @required this.startPos,

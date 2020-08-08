@@ -21,7 +21,7 @@ class TrimEditor extends StatefulWidget {
   final Function(double startValue) onChangeStart;
   final Function(double endValue) onChangeEnd;
   final Function(bool isPlaying) onChangePlaybackState;
-  final VideoPlayerController videoPlayerController;
+  final VideoPlayHeaderController videoPlayerController;
 
   /// Widget for displaying the video trimmer.
   ///
@@ -145,7 +145,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
   Animation<double> _scrubberAnimation;
   AnimationController _animationController;
   Tween<double> _linearTween;
-  VideoPlayerController get videoPlayerController=>widget.videoPlayerController;
+  VideoPlayHeaderController get videoPlayerController=>widget.videoPlayerController;
 
   @override
   void initState() {
