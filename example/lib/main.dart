@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:video_trimmer/trim_editor.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 import 'package:video_trimmer/video_viewer.dart';
-import 'package:video_player/video_player.dart';
+import 'package:video_player_header/video_player_header.dart';
 
 void main() => runApp(MyApp());
 

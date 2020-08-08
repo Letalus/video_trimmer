@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:video_player/video_player.dart';
+import 'package:video_player_header/video_player_header.dart';
 import 'package:video_trimmer/file_formats.dart';
 import 'package:video_trimmer/storage_dir.dart';
 import 'package:video_trimmer/trim_editor.dart';
