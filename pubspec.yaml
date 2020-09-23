@@ -4,7 +4,7 @@ version: 0.2.4
 homepage: https://github.com/sbis04/video_trimmer
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.4.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -14,7 +14,7 @@ dependencies:
   video_player_header:
     git:
       url: https://github.com/mertcankirtay/videoPlayerWithHeader.git
-  flutter_ffmpeg: ^0.2.10
+  flutter_ffmpeg: ^0.3.0
   video_thumbnail: ^0.2.1
   path_provider: ^1.6.7
   intl: ^0.16.1
