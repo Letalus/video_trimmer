@@ -316,7 +316,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
     if (_videoFile != null) {
       await videoPlayerController.setVolume(1.0);
       print(
-          'video duration is now: ${videoPlayerController.value.duration?.inMilliseconds}: is initialized: ${videoPlayerController.value.initialized}');
+          'video duration is now: ${videoPlayerController.value.duration?.inMilliseconds}: is initialized: ${videoPlayerController.value.isInitialized}');
       _videoDuration = videoPlayerController.value.duration?.inMilliseconds ?? 10000;
 
       _videoEndPos = _videoDuration.toDouble();
@@ -343,7 +343,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
             }
           });
         } else {
-          if (videoPlayerController.value.initialized) {
+          if (videoPlayerController.value.isInitialized) {
             if (_animationController != null) {
               print('ANI VALUE: ${(_scrubberAnimation.value).toInt()} && END: ${(_endPos.dx).toInt()}');
               if ((_scrubberAnimation.value).toInt() == (_endPos.dx).toInt()) {
