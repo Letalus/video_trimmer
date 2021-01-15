@@ -15,21 +15,22 @@ class TrimEditorPainter extends CustomPainter {
   final double borderRadius;
   final VideoPlayerController videoPlayerController;
   final double smallRectWidth;
-  TrimEditorPainter({
-    @required this.startPos,
-    @required this.endPos,
-    @required this.scrubberAnimationDx,
-    this.circleSize = 0.5,
-    this.borderWidth = 3,
-    this.scrubberWidth = 1,
-    this.showScrubber = true,
-    this.borderPaintColor = Colors.white,
-    this.circlePaintColor = Colors.white,
-    this.scrubberPaintColor = Colors.white,
-    this.videoPlayerController,
-    this.borderRadius = 10,
-    this.smallRectWidth = 12
-  })  : assert(startPos != null),
+
+  TrimEditorPainter(
+      {@required this.startPos,
+      @required this.endPos,
+      @required this.scrubberAnimationDx,
+      this.circleSize = 0.5,
+      this.borderWidth = 3,
+      this.scrubberWidth = 1,
+      this.showScrubber = true,
+      this.borderPaintColor = Colors.white,
+      this.circlePaintColor = Colors.white,
+      this.scrubberPaintColor = Colors.white,
+      this.videoPlayerController,
+      this.borderRadius = 10,
+      this.smallRectWidth = 12})
+      : assert(startPos != null),
         assert(endPos != null),
         assert(scrubberAnimationDx != null),
         assert(circleSize != null),
@@ -42,6 +43,7 @@ class TrimEditorPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    print('scrubberAnimationDx: $scrubberAnimationDx');
     var borderPaint = Paint()
       ..color = borderPaintColor
       ..strokeWidth = borderWidth
@@ -50,12 +52,12 @@ class TrimEditorPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     var fillerPaint = Paint()
-    ..color = borderPaintColor
-    ..style = PaintingStyle.fill;
+      ..color = borderPaintColor
+      ..style = PaintingStyle.fill;
 
     var notSelectedBackgroundPaint = Paint()
-    ..color = Colors.black38
-    ..style = PaintingStyle.fill;
+      ..color = Colors.black38
+      ..style = PaintingStyle.fill;
 
     var scrubberPaint = Paint()
       ..color = scrubberPaintColor
@@ -63,16 +65,26 @@ class TrimEditorPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    var whitePaint = Paint()..strokeWidth = 1.5..color = Colors.white..style = PaintingStyle.stroke..strokeCap = StrokeCap.round;
+    var whitePaint = Paint()
+      ..strokeWidth = 1.5
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
 
-    final rect = RRect.fromRectXY(Rect.fromPoints(startPos, endPos),10,10);
-    final _leftRRect = RRect.fromLTRBAndCorners(startPos.dx, 0, startPos.dx+smallRectWidth, endPos.dy, topLeft: Radius.circular(borderRadius), bottomLeft: Radius.circular(borderRadius));
-    final _rightRRect = RRect.fromLTRBAndCorners(endPos.dx, 0, endPos.dx-smallRectWidth, endPos.dy, topRight: Radius.circular(borderRadius), bottomRight: Radius.circular(borderRadius));
-    final _leftInsideRRect = RRect.fromLTRBAndCorners(startPos.dx+smallRectWidth*.4,  endPos.dy*.3, startPos.dx+smallRectWidth*.6, endPos.dy*.7, topLeft: Radius.circular(1), bottomLeft: Radius.circular(1));
-    final _rightInsideRRect = RRect.fromLTRBAndCorners(endPos.dx-smallRectWidth*.4,  endPos.dy*.3, endPos.dx-smallRectWidth*.6, endPos.dy*.7, topRight: Radius.circular(1), bottomRight: Radius.circular(1));
+    final rect = RRect.fromRectXY(Rect.fromPoints(startPos, endPos), 10, 10);
+    final _leftRRect = RRect.fromLTRBAndCorners(startPos.dx, 0, startPos.dx + smallRectWidth, endPos.dy,
+        topLeft: Radius.circular(borderRadius), bottomLeft: Radius.circular(borderRadius));
+    final _rightRRect = RRect.fromLTRBAndCorners(endPos.dx, 0, endPos.dx - smallRectWidth, endPos.dy,
+        topRight: Radius.circular(borderRadius), bottomRight: Radius.circular(borderRadius));
+    final _leftInsideRRect = RRect.fromLTRBAndCorners(
+        startPos.dx + smallRectWidth * .4, endPos.dy * .3, startPos.dx + smallRectWidth * .6, endPos.dy * .7,
+        topLeft: Radius.circular(1), bottomLeft: Radius.circular(1));
+    final _rightInsideRRect = RRect.fromLTRBAndCorners(
+        endPos.dx - smallRectWidth * .4, endPos.dy * .3, endPos.dx - smallRectWidth * .6, endPos.dy * .7,
+        topRight: Radius.circular(1), bottomRight: Radius.circular(1));
 
-    final _leftBackgroundRect = Rect.fromLTRB(0, 0, startPos.dx+smallRectWidth, endPos.dy);
-    final _rightBackgroundRect = Rect.fromLTRB(size.width, 0, endPos.dx-smallRectWidth, endPos.dy);
+    final _leftBackgroundRect = Rect.fromLTRB(0, 0, startPos.dx + smallRectWidth, endPos.dy);
+    final _rightBackgroundRect = Rect.fromLTRB(size.width, 0, endPos.dx - smallRectWidth, endPos.dy);
 
     if (showScrubber) {
       if (scrubberAnimationDx.toInt() > startPos.dx.toInt()) {
@@ -91,7 +103,6 @@ class TrimEditorPainter extends CustomPainter {
     canvas.drawRRect(_rightRRect, fillerPaint);
     canvas.drawRRect(_leftInsideRRect, whitePaint);
     canvas.drawRRect(_rightInsideRRect, whitePaint);
-
   }
 
   @override

@@ -1,6 +1,4 @@
-import 'dart:math';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -33,11 +31,12 @@ class ThumbnailViewer extends StatelessWidget {
     List<Uint8List> _byteList = [];
 
     for (int i = 1; i <= numberOfThumbnails; i++) {
+      int _timeMs = (_eachPart * i).toInt();
       Uint8List _bytes;
       _bytes = await VideoThumbnail.thumbnailData(
         video: _videoPath,
         imageFormat: ImageFormat.JPEG,
-        timeMs: (_eachPart * i).toInt(),
+        timeMs: _timeMs,
         quality: quality,
       );
 

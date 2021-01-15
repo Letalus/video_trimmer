@@ -162,7 +162,21 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
     _thumbnailViewerW = widget.viewerWidthMinusPadding;
 
     _endPos = Offset(_thumbnailViewerW, _thumbnailViewerH);
-    _initializeVideoController();
+    _initializeVideoController().then((value) {
+      setState(() {
+        thumbnailWidget = ThumbnailViewer(
+          videoFile: _videoFile,
+          videoDuration: _videoDuration,
+          thumbnailHeight: _thumbnailViewerH,
+          numberOfThumbnails: widget.numberOfThumbNail,
+          width: widget.viewerWidthMinusPadding,
+          quality: widget.thumbnailQuality,
+        );
+
+        //Must be called because otherwise the controller keeps stuck and only switches between end and start point
+        _animationController.reset();
+      });
+    });
 
     // Defining the tween points
     _linearTween = Tween(begin: _startPos.dx, end: _endPos.dx);
@@ -175,21 +189,13 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
     _scrubberAnimation = _linearTween.animate(_animationController)
       ..addListener(() {
         setState(() {});
+        print('value: ${_animationController.value}');
       })
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           _animationController.stop();
         }
       });
-
-    thumbnailWidget = ThumbnailViewer(
-      videoFile: _videoFile,
-      videoDuration: _videoDuration,
-      thumbnailHeight: _thumbnailViewerH,
-      numberOfThumbnails: widget.numberOfThumbNail,
-      width: widget.viewerWidthMinusPadding,
-      quality: widget.thumbnailQuality,
-    );
   }
 
   @override
@@ -205,59 +211,9 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onHorizontalDragStart: (DragStartDetails details) {
-        print("START");
-        print(details.localPosition);
-        print((_startPos.dx - details.localPosition.dx).abs());
-        print((_endPos.dx - details.localPosition.dx).abs());
-        if (_endPos.dx >= _startPos.dx) {
-          if ((_startPos.dx - details.localPosition.dx).abs() > (_endPos.dx - details.localPosition.dx).abs()) {
-            setState(() {
-              _canUpdateStart = false;
-            });
-          } else {
-            setState(() {
-              _canUpdateStart = true;
-            });
-          }
-        } else {
-          if (_startPos.dx > details.localPosition.dx) {
-            _isLeftDrag = true;
-          } else {
-            _isLeftDrag = false;
-          }
-        }
-      },
-      onHorizontalDragEnd: (DragEndDetails details) {
-        setState(() {
-          _circleSize = widget.circleSize;
-        });
-      },
-      onHorizontalDragUpdate: (DragUpdateDetails details) {
-        print("UPDATE");
-        print("START POINT: ${_startPos.dx + details.delta.dx}");
-        print("END POINT: ${_endPos.dx + details.delta.dx}");
-        print("Duration: ${details.delta.dx}");
-
-        _circleSize = widget.circleSizeOnDrag;
-
-        if (_endPos.dx >= _startPos.dx) {
-          _isLeftDrag = false;
-          if (_canUpdateStart && _startPos.dx + details.delta.dx > 0) {
-            _isLeftDrag = false; // To prevent from scrolling over
-            _setVideoStartPosition(details);
-          } else if (!_canUpdateStart && _endPos.dx + details.delta.dx < _thumbnailViewerW) {
-            _isLeftDrag = true; // To prevent from scrolling over
-            _setVideoEndPosition(details);
-          }
-        } else {
-          if (_isLeftDrag && _startPos.dx + details.delta.dx > 0) {
-            _setVideoStartPosition(details);
-          } else if (!_isLeftDrag && _endPos.dx + details.delta.dx < _thumbnailViewerW) {
-            _setVideoEndPosition(details);
-          }
-        }
-      },
+      onHorizontalDragStart: _onHorizontalDragStart,
+      onHorizontalDragEnd: _onHorizontalDragEnd,
+      onHorizontalDragUpdate: _onHorizontalDragUpdate,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -337,6 +293,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
               _animationController.stop();
             } else {
               if (!_animationController.isAnimating) {
+                print('is animating');
                 widget.onChangePlaybackState(true);
                 _animationController.forward();
               }
@@ -356,6 +313,62 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         }
       });
     }
+  }
+
+  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+    print("UPDATE");
+    print("START POINT: ${_startPos.dx + details.delta.dx}");
+    print("END POINT: ${_endPos.dx + details.delta.dx}");
+    print("Duration: ${details.delta.dx}");
+
+    _circleSize = widget.circleSizeOnDrag;
+
+    if (_endPos.dx >= _startPos.dx) {
+      _isLeftDrag = false;
+      if (_canUpdateStart && _startPos.dx + details.delta.dx > 0) {
+        _isLeftDrag = false; // To prevent from scrolling over
+        _setVideoStartPosition(details);
+      } else if (!_canUpdateStart && _endPos.dx + details.delta.dx < _thumbnailViewerW) {
+        _isLeftDrag = true; // To prevent from scrolling over
+        _setVideoEndPosition(details);
+      }
+    } else {
+      if (_isLeftDrag && _startPos.dx + details.delta.dx > 0) {
+        _setVideoStartPosition(details);
+      } else if (!_isLeftDrag && _endPos.dx + details.delta.dx < _thumbnailViewerW) {
+        _setVideoEndPosition(details);
+      }
+    }
+  }
+
+  void _onHorizontalDragStart(DragStartDetails details) {
+    print("START");
+    print(details.localPosition);
+    print((_startPos.dx - details.localPosition.dx).abs());
+    print((_endPos.dx - details.localPosition.dx).abs());
+    if (_endPos.dx >= _startPos.dx) {
+      if ((_startPos.dx - details.localPosition.dx).abs() > (_endPos.dx - details.localPosition.dx).abs()) {
+        setState(() {
+          _canUpdateStart = false;
+        });
+      } else {
+        setState(() {
+          _canUpdateStart = true;
+        });
+      }
+    } else {
+      if (_startPos.dx > details.localPosition.dx) {
+        _isLeftDrag = true;
+      } else {
+        _isLeftDrag = false;
+      }
+    }
+  }
+
+  void _onHorizontalDragEnd(DragEndDetails details) {
+    setState(() {
+      _circleSize = widget.circleSize;
+    });
   }
 
   void _setVideoStartPosition(DragUpdateDetails details) async {

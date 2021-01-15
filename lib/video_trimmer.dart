@@ -23,7 +23,7 @@ class Trimmer {
   final File videoFile;
   static File currentVideoFile;
 
-  final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
+  final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
 
   Trimmer(this.videoFile) {
     videoPlayerController = VideoPlayerController.file(videoFile);

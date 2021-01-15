@@ -79,11 +79,11 @@ class _HomePageState extends State<HomePage> {
                     setState(() {
                       _trimmer = null;
                     });
-                    File file = await ImagePicker.pickVideo(
+                    PickedFile pickedFile = await ImagePicker().getVideo(
                       source: ImageSource.gallery,
                     );
-                    if (file != null) {
-                      _trimmer = Trimmer(file);
+                    if (pickedFile != null) {
+                      _trimmer = Trimmer(File(pickedFile.path));
                       await _trimmer.loadVideo();
                       setState(() {
 
