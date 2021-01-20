@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  video_player: ^2.0.0-nullsafety.4
+  video_player: ^1.0.1
   flutter_ffmpeg: ^0.3.0
   video_thumbnail: ^0.2.5+1
   path_provider: ^1.6.7
