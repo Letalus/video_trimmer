@@ -38,7 +38,7 @@ class VideoViewer extends StatelessWidget {
         padding: padding,
         child: AspectRatio(
           aspectRatio: videoPlayerController.value.aspectRatio,
-          child: videoPlayerController.value.isInitialized
+          child: videoPlayerController.value.initialized
               ? Container(
                   decoration: BoxDecoration(
                     border: Border.all(
