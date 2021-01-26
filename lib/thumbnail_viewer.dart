@@ -54,7 +54,7 @@ class ThumbnailViewer extends StatelessWidget {
     return StreamBuilder(
       stream: generateThumbnail(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.hasData||!snapshot.hasError) {
           List<Uint8List> _imageBytes = snapshot.data;
           return SizedBox(
             width: width,
@@ -68,10 +68,19 @@ class ThumbnailViewer extends StatelessWidget {
                     child: Container(
                       height: thumbnailHeight,
                       width: thumbnailHeight,
-                      child: Image(
-                        image: MemoryImage(_imageBytes[index]),
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
+                      child: Builder(
+                        builder: (context){
+                          try{
+                            return Image(
+                              image: MemoryImage(_imageBytes[index]),
+                              fit: BoxFit.cover,
+                              alignment: Alignment.center,
+                            );
+                          }catch (e){
+                            print('video trimmer bug in thumbnail_viewer.dart: $e');
+                            return Container();
+                          }
+                        },
                       ),
                     ),
                   );
