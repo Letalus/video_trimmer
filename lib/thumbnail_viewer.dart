@@ -54,7 +54,7 @@ class ThumbnailViewer extends StatelessWidget {
     return StreamBuilder(
       stream: generateThumbnail(),
       builder: (context, snapshot) {
-        if (snapshot.hasData||!snapshot.hasError) {
+        if (snapshot.hasData) {
           List<Uint8List> _imageBytes = snapshot.data;
           return SizedBox(
             width: width,
