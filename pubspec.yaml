@@ -13,7 +13,7 @@ dependencies:
   video_player: ^1.0.1
   flutter_ffmpeg: ^0.3.0
   video_thumbnail: ^0.2.5+1
-  path_provider: ^2.0.0-nullsafety
+  path_provider: ^1.6.7
   intl: ^0.16.1
   path: ^1.6.4
 
