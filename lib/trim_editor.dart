@@ -276,25 +276,25 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
       _videoDuration = videoPlayerController.value.duration?.inMilliseconds ?? 10000;
 
       _videoEndPos = _videoDuration.toDouble();
-      widget.onChangeEnd(_videoEndPos);
+      if(widget.onChangeEnd!=null)widget.onChangeEnd(_videoEndPos);
 
       videoPlayerController.addListener(() {
         final bool isPlaying = videoPlayerController.value.isPlaying;
 
         if (isPlaying) {
-          widget.onChangePlaybackState(true);
+          if(widget.onChangePlaybackState!=null)widget.onChangePlaybackState(true);
           setState(() {
             _currentPosition = videoPlayerController.value.position.inMilliseconds;
             print("CURRENT POS: $_currentPosition");
 
             if (_currentPosition > _videoEndPos.toInt()) {
-              widget.onChangePlaybackState(false);
+              if(widget.onChangePlaybackState!=null)widget.onChangePlaybackState(false);
               videoPlayerController.pause();
               _animationController.stop();
             } else {
               if (!_animationController.isAnimating) {
                 print('is animating');
-                widget.onChangePlaybackState(true);
+                if(widget.onChangePlaybackState!=null)widget.onChangePlaybackState(true);
                 _animationController.forward();
               }
             }
@@ -307,7 +307,6 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
                 _animationController.reset();
               }
               _animationController.stop();
-              //widget.onChangePlaybackState(false);
             }
           }
         }
@@ -380,7 +379,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         _startFraction = (_startPos.dx / _thumbnailViewerW);
         print("START PERCENT: $_startFraction");
         _videoStartPos = _videoDuration * _startFraction;
-        widget.onChangeStart(_videoStartPos);
+        if(widget.onChangeStart!=null)widget.onChangeStart(_videoStartPos);
       });
       await videoPlayerController.pause();
       await videoPlayerController.seekTo(Duration(milliseconds: _videoStartPos.toInt()));
@@ -399,7 +398,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         _endFraction = _endPos.dx / _thumbnailViewerW;
         print("END PERCENT: $_endFraction");
         _videoEndPos = _videoDuration * _endFraction;
-        widget.onChangeEnd(_videoEndPos);
+        if(widget.onChangeEnd!=null)widget.onChangeEnd(_videoEndPos);
       });
       await videoPlayerController.pause();
       await videoPlayerController.seekTo(Duration(milliseconds: _videoEndPos.toInt()));
