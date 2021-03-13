@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   onPressed: () async {
                     bool playbackState =
-                    await _trimmer.videPlaybackControl(
+                    await _trimmer.videoPlaybackControl(
                       startValue: _startValue,
                       endValue: _endValue,
                     );
