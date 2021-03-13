@@ -149,7 +149,9 @@ class Trimmer {
     String videoFileName,
     StorageDir storageDir,
   }) async {
-    final String _videoPath = currentVideoFile.path;
+    print('current video file: ${currentVideoFile.path}');
+    final String _videoPath = currentVideoFile.path.replaceAll(RegExp(r'MOV'), 'MP4');
+    print('manipulated video file: $_videoPath');
     final String _videoName = basename(_videoPath).split('.')[0];
 
     String _command;
