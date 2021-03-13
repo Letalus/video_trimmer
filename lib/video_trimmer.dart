@@ -244,7 +244,7 @@ class Trimmer {
   Future<String> _convertMovToMp4(String videoPath) async {
     final _newVideoPath = videoPath.replaceAll(RegExp(r'MOV'), 'MP4');
 
-    String command = '-i "$videoPath" -vcodec h264 -acodec mp3 "$_newVideoPath"';
+    String command = '-i "$videoPath" -vcodec h264 -acodec mp2 "$_newVideoPath"';
 
     await _flutterFFmpeg.execute(command).whenComplete(() {
       print('video has been converted to mp4');
