@@ -148,9 +148,9 @@ class Trimmer {
     String videoFileName,
     StorageDir storageDir,
   }) async {
-    final String _videoPath = _isVideoFormatMov(currentVideoFile.path)
+    final String _videoPath = /*_isVideoFormatMov(currentVideoFile.path)
         ? await _convertMovToMp4(currentVideoFile.path)
-        : currentVideoFile.path;
+        : */currentVideoFile.path;
     final String _videoName = basename(_videoPath).split('.')[0];
 
     String _command;
