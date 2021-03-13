@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_trimmer/thumbnail_viewer.dart';
@@ -21,7 +20,7 @@ class TrimEditor extends StatefulWidget {
   final Function(double startValue) onChangeStart;
   final Function(double endValue) onChangeEnd;
   final Function(bool isPlaying) onChangePlaybackState;
-  final VideoPlayerController videoPlayerController;
+  final Trimmer trimmer;
 
   /// Widget for displaying the video trimmer.
   ///
@@ -85,26 +84,26 @@ class TrimEditor extends StatefulWidget {
   /// * [onChangePlaybackState] is a callback to the video playback
   /// state to know whether it is currently playing or paused.
   ///
-  TrimEditor(
-    this.videoPlayerController, {
-    Key key,
-    @required this.viewerWidthMinusPadding,
-    @required this.viewerHeight,
-    this.circleSize = 5.0,
-    this.circleSizeOnDrag = 8.0,
-    this.circlePaintColor = Colors.white,
-    this.borderPaintColor = Colors.white,
-    this.scrubberPaintColor = Colors.white,
-    this.thumbnailQuality = 75,
-    this.showDuration = true,
-    this.numberOfThumbNail = 8,
-    this.durationTextStyle = const TextStyle(
-      color: Colors.white,
-    ),
-    this.onChangeStart,
-    this.onChangeEnd,
-    this.onChangePlaybackState,
-  })  : assert(viewerWidthMinusPadding != null),
+  TrimEditor(this.trimmer, {
+        Key key,
+        @required this.viewerWidthMinusPadding,
+        @required this.viewerHeight,
+        this.circleSize = 5.0,
+        this.circleSizeOnDrag = 8.0,
+        this.circlePaintColor = Colors.white,
+        this.borderPaintColor = Colors.white,
+        this.scrubberPaintColor = Colors.white,
+        this.thumbnailQuality = 75,
+        this.showDuration = true,
+        this.numberOfThumbNail = 8,
+        this.durationTextStyle = const TextStyle(
+          color: Colors.white,
+        ),
+        this.onChangeStart,
+        this.onChangeEnd,
+        this.onChangePlaybackState,
+      })
+      : assert(viewerWidthMinusPadding != null),
         assert(viewerHeight != null),
         assert(circleSize != null),
         assert(circleSizeOnDrag != null),
@@ -149,7 +148,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
   AnimationController _animationController;
   Tween<double> _linearTween;
 
-  VideoPlayerController get videoPlayerController => widget.videoPlayerController;
+  VideoPlayerController get videoPlayerController => widget.trimmer.videoPlayerController;
 
   @override
   void initState() {
@@ -157,46 +156,46 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
 
     _circleSize = widget.circleSize;
 
-    _videoFile = Trimmer.currentVideoFile;
+    _videoFile = widget.trimmer.videoFile;
     _thumbnailViewerH = widget.viewerHeight;
 
     _thumbnailViewerW = widget.viewerWidthMinusPadding;
 
     _endPos = Offset(_thumbnailViewerW, _thumbnailViewerH);
     _initializeVideoController().then((value) {
-      setState(() {
-        thumbnailWidget = ThumbnailViewer(
-          videoFile: _videoFile,
-          videoDuration: _videoDuration,
-          thumbnailHeight: _thumbnailViewerH,
-          numberOfThumbnails: widget.numberOfThumbNail,
-          width: widget.viewerWidthMinusPadding,
-          quality: widget.thumbnailQuality,
-        );
+    setState(() {
+    thumbnailWidget = ThumbnailViewer(
+    videoFile: _videoFile,
+    videoDuration: _videoDuration,
+    thumbnailHeight: _thumbnailViewerH,
+    numberOfThumbnails: widget.numberOfThumbNail,
+    width: widget.viewerWidthMinusPadding,
+    quality: widget.thumbnailQuality,
+    );
 
-        //Must be called because otherwise the controller keeps stuck and only switches between end and start point
-        _animationController.reset();
-      });
+    //Must be called because otherwise the controller keeps stuck and only switches between end and start point
+    _animationController.reset();
+    });
     });
 
     // Defining the tween points
     _linearTween = Tween(begin: _startPos.dx, end: _endPos.dx);
 
     _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: (_videoEndPos - _videoStartPos).toInt()),
+    vsync: this,
+    duration: Duration(milliseconds: (_videoEndPos - _videoStartPos).toInt()),
     );
 
     _scrubberAnimation = _linearTween.animate(_animationController)
-      ..addListener(() {
-        setState(() {});
-        print('value: ${_animationController.value}');
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _animationController.stop();
-        }
-      });
+    ..addListener(() {
+    setState(() {});
+    print('value: ${_animationController.value}');
+    })
+    ..addStatusListener((status) {
+    if (status == AnimationStatus.completed) {
+    _animationController.stop();
+    }
+    });
   }
 
   @override
@@ -221,28 +220,28 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         children: <Widget>[
           widget.showDuration
               ? Container(
-                  width: _thumbnailViewerW,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        Text(Duration(milliseconds: _videoStartPos.toInt()).toString().split('.')[0],
-                            style: widget.durationTextStyle),
-                        Text(
-                            Duration(milliseconds: _videoEndPos.toInt() - _videoStartPos.toInt())
-                                .toString()
-                                .split('.')[0],
-                            style: widget.durationTextStyle),
-                        Text(
-                          Duration(milliseconds: _videoEndPos.toInt()).toString().split('.')[0],
-                          style: widget.durationTextStyle,
-                        ),
-                      ],
-                    ),
+            width: _thumbnailViewerW,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Text(Duration(milliseconds: _videoStartPos.toInt()).toString().split('.')[0],
+                      style: widget.durationTextStyle),
+                  Text(
+                      Duration(milliseconds: _videoEndPos.toInt() - _videoStartPos.toInt())
+                          .toString()
+                          .split('.')[0],
+                      style: widget.durationTextStyle),
+                  Text(
+                    Duration(milliseconds: _videoEndPos.toInt()).toString().split('.')[0],
+                    style: widget.durationTextStyle,
                   ),
-                )
+                ],
+              ),
+            ),
+          )
               : Container(),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
@@ -274,7 +273,8 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
     if (_videoFile != null) {
       await videoPlayerController.setVolume(1.0);
       print(
-          'video duration is now: ${videoPlayerController.value.duration?.inMilliseconds}: is initialized: ${videoPlayerController.value.isInitialized}');
+          'video duration is now: ${videoPlayerController.value.duration
+              ?.inMilliseconds}: is initialized: ${videoPlayerController.value.isInitialized}');
       _videoDuration = videoPlayerController.value.duration?.inMilliseconds ?? 10000;
 
       _videoEndPos = _videoDuration.toDouble();

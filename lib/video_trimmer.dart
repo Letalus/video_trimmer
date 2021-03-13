@@ -21,7 +21,7 @@ import 'package:video_trimmer/trim_editor.dart';
 class Trimmer {
   VideoPlayerController videoPlayerController;
   final File videoFile;
-  static File currentVideoFile;
+  File currentVideoFile;
 
   final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
 
