@@ -1,16 +1,15 @@
 library video_trimmer;
 
 import 'dart:io';
-import 'package:path/path.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_trimmer/file_formats.dart';
 import 'package:video_trimmer/storage_dir.dart';
-import 'package:video_trimmer/trim_editor.dart';
 
 /// Helps in loading video from file, saving trimmed video to a file
 /// and gives video playback controls. Some of the helpful methods
@@ -149,9 +148,9 @@ class Trimmer {
     String videoFileName,
     StorageDir storageDir,
   }) async {
-    print('current video file: ${currentVideoFile.path}');
-    final String _videoPath = currentVideoFile.path.replaceAll(RegExp(r'MOV'), 'MP4');
-    print('manipulated video file: $_videoPath');
+    final String _videoPath = _isVideoFormatMov(currentVideoFile.path)
+        ? await _convertMovToMp4(currentVideoFile.path)
+        : currentVideoFile.path;
     final String _videoName = basename(_videoPath).split('.')[0];
 
     String _command;
@@ -238,6 +237,24 @@ class Trimmer {
     return _outputPath;
   }
 
+  bool _isVideoFormatMov(String videoPath) {
+    return videoPath.contains('MOV', videoPath.length - 6);
+  }
+
+  Future<String> _convertMovToMp4(String videoPath) async {
+    final _newVideoPath = videoPath.replaceAll(RegExp(r'MOV'), 'MP4');
+
+    String command = '-i "$videoPath" -vcodec h264 -acodec mp2 "$_newVideoPath"';
+
+    await _flutterFFmpeg.execute(command).whenComplete(() {
+      print('video has been converted to mp4');
+    }).catchError((error) {
+      print('An error occured while converting the video from mov to mp4: $error');
+    });
+
+    return _newVideoPath;
+  }
+
   /// For getting the video controller state, to know whether the
   /// video is playing or paused currently.
   ///
@@ -248,7 +265,7 @@ class Trimmer {
   ///
   /// Returns a `Future<bool>`, if `true` then video is playing
   /// otherwise paused.
-  Future<bool> videPlaybackControl({
+  Future<bool> videoPlaybackControl({
     @required double startValue,
     @required double endValue,
   }) async {
