@@ -284,4 +284,8 @@ class Trimmer {
   File getVideoFile() {
     return currentVideoFile;
   }
+
+  void dispose(){
+    videoPlayerController.dispose();
+  }
 }
