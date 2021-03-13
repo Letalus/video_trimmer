@@ -43,6 +43,7 @@ class TrimEditorPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    print('scrubberAnimationDx: $scrubberAnimationDx');
     var borderPaint = Paint()
       ..color = borderPaintColor
       ..strokeWidth = borderWidth
