@@ -190,7 +190,6 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
     _scrubberAnimation = _linearTween.animate(_animationController)
       ..addListener(() {
         setState(() {});
-        print('value: ${_animationController.value}');
       })
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
@@ -304,7 +303,6 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         } else {
           if (videoPlayerController.value.isInitialized) {
             if (_animationController != null) {
-              print('ANI VALUE: ${(_scrubberAnimation.value).toInt()} && END: ${(_endPos.dx).toInt()}');
               if ((_scrubberAnimation.value).toInt() == (_endPos.dx).toInt()) {
                 _animationController.reset();
               }
