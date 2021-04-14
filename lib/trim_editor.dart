@@ -285,7 +285,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
 
         if (isPlaying) {
           if (widget.onChangePlaybackState != null) widget.onChangePlaybackState(true);
-          setState(() {
+          if(mounted)setState(() {
             _currentPosition = videoPlayerController.value.position.inMilliseconds;
             print("CURRENT POS: $_currentPosition");
 
