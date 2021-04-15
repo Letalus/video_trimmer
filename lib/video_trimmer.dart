@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:video_trimmer/file_formats.dart';
 import 'package:video_trimmer/storage_dir.dart';
 
@@ -17,6 +18,7 @@ import 'package:video_trimmer/storage_dir.dart';
 /// * [loadVideo()]
 /// * [saveTrimmedVideo()]
 /// * [videPlaybackControl()]
+/// * getThumbnail
 class Trimmer {
   VideoPlayerController videoPlayerController;
   final File videoFile;
@@ -234,6 +236,8 @@ class Trimmer {
       debugPrint('Couldn\'t save the video');
     });
 
+    currentVideoFile = File(_outputPath);
+
     return _outputPath;
   }
 
@@ -253,6 +257,12 @@ class Trimmer {
     });
 
     return _newVideoPath;
+  }
+
+  Future<File> getThumbnail()async{
+    final thumbNailPath =  await VideoThumbnail.thumbnailFile(video: currentVideoFile.path);
+
+    return File(thumbNailPath);
   }
 
   /// For getting the video controller state, to know whether the
