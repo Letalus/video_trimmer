@@ -83,13 +83,13 @@ class Trimmer {
   /// The required parameters are [startValue] & [endValue].
   ///
   /// The optional parameters are [videoFolderName], [videoFileName],
-  /// [outputFormat], [fpsGIF], [scaleGIF].
+  /// [outputFormat], [fpsGIF], [scaleGIF], [applyVideoEncoding].
   ///
   /// The `@required` parameter [startValue] is for providing a starting point
-  /// to the trimmed video.
+  /// to the trimmed video. To be specified in `milliseconds`.
   ///
   /// The `@required` parameter [endValue] is for providing an ending point
-  /// to the trimmed video.
+  /// to the trimmed video. To be specified in `milliseconds`.
   ///
   /// The parameter [videoFolderName] is used to
   /// pass a folder name which will be used for creating a new
@@ -128,6 +128,11 @@ class Trimmer {
   /// is selected by maintaining the aspect ratio automatically (by
   /// default it is set to `480`)
   ///
+  ///
+  /// * [applyVideoEncoding] for specifying whether to apply video
+  /// encoding (by default it is set to `false`).
+  ///
+  ///
   /// ADVANCED OPTION:
   ///
   /// If you want to give custom `FFmpeg` command, then define
@@ -141,6 +146,7 @@ class Trimmer {
   Future<String> saveTrimmedVideo({
     @required double startValue,
     @required double endValue,
+    bool applyVideoEncoding = false,
     FileFormat outputFormat,
     String ffmpegCommand,
     String customVideoFormat,
@@ -150,15 +156,17 @@ class Trimmer {
     String videoFileName,
     StorageDir storageDir,
   }) async {
-    final String _videoPath = /*_isVideoFormatMov(currentVideoFile.path)
-        ? await _convertMovToMp4(currentVideoFile.path)
-        : */currentVideoFile.path;
+    final String _videoPath = currentVideoFile.path;
     final String _videoName = basename(_videoPath).split('.')[0];
 
     String _command;
 
     // Formatting Date and Time
-    String dateTime = DateFormat.yMMMd().addPattern('-').add_Hms().format(DateTime.now()).toString();
+    String dateTime = DateFormat.yMMMd()
+        .addPattern('-')
+        .add_Hms()
+        .format(DateTime.now())
+        .toString();
 
     // String _resultString;
     String _outputPath;
@@ -182,7 +190,7 @@ class Trimmer {
       videoFolderName,
       storageDir,
     ).whenComplete(
-      () => print("Retrieved Trimmer folder"),
+          () => print("Retrieved Trimmer folder"),
     );
 
     Duration startPoint = Duration(milliseconds: startValue.toInt());
@@ -201,11 +209,14 @@ class Trimmer {
       _outputFormatString = outputFormat.toString();
     }
 
-    String _trimLengthCommand =
-        '-i "$_videoPath" -ss ${startPoint.inSeconds} -t ${endPoint.inSeconds - startPoint.inSeconds}';
+    String _trimLengthCommand = ' -ss $startPoint -i "$_videoPath" -t ${endPoint - startPoint} -avoid_negative_ts make_zero ';
 
     if (ffmpegCommand == null) {
-      _command = '$_trimLengthCommand -c copy ';
+      _command = '$_trimLengthCommand -c:a copy ';
+
+      if (!applyVideoEncoding) {
+        _command += '-c:v copy ';
+      }
 
       if (outputFormat == FileFormat.gif) {
         if (fpsGIF == null) {
@@ -215,7 +226,7 @@ class Trimmer {
           scaleGIF = 480;
         }
         _command =
-            '$_trimLengthCommand -vf "fps=$fpsGIF,scale=$scaleGIF:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 ';
+        '$_trimLengthCommand -vf "fps=$fpsGIF,scale=$scaleGIF:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 ';
       }
     } else {
       _command = '$_trimLengthCommand $ffmpegCommand ';
@@ -236,33 +247,7 @@ class Trimmer {
       debugPrint('Couldn\'t save the video');
     });
 
-    currentVideoFile = File(_outputPath);
-
     return _outputPath;
-  }
-
-  bool _isVideoFormatMov(String videoPath) {
-    return videoPath.contains('MOV', videoPath.length - 6);
-  }
-
-  Future<String> _convertMovToMp4(String videoPath) async {
-    final _newVideoPath = videoPath.replaceAll(RegExp(r'MOV'), 'MP4');
-
-    String command = '-i "$videoPath" -vcodec h264 -acodec mp2 "$_newVideoPath"';
-
-    await _flutterFFmpeg.execute(command).whenComplete(() {
-      print('video has been converted to mp4');
-    }).catchError((error) {
-      print('An error occured while converting the video from mov to mp4: $error');
-    });
-
-    return _newVideoPath;
-  }
-
-  Future<File> getThumbnail()async{
-    final thumbNailPath =  await VideoThumbnail.thumbnailFile(video: currentVideoFile.path);
-
-    return File(thumbNailPath);
   }
 
   /// For getting the video controller state, to know whether the
