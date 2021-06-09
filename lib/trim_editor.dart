@@ -5,6 +5,7 @@ import 'package:video_player/video_player.dart';
 import 'package:video_trimmer/thumbnail_viewer.dart';
 import 'package:video_trimmer/trim_editor_painter.dart';
 import 'package:video_trimmer/video_trimmer.dart';
+import 'package:better_player/better_player.dart';
 
 class TrimEditor extends StatefulWidget {
   final double viewerWidthMinusPadding;

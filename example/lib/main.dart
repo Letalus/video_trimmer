@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 0),()async{
+    /*Future.delayed(Duration(seconds: 0),()async{
       _trimmer = Trimmer(_videoFile);
       await _trimmer!.loadVideo();
       setState(() {
@@ -50,12 +50,13 @@ class _HomePageState extends State<HomePage> {
 
         });
       });
-    });
+    });*/
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Container();
+    /*return Scaffold(
       appBar: AppBar(
         title: Text("Video Trimmer"),
       ),
@@ -149,7 +150,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-    );
+    );*/
   }
 }
 
