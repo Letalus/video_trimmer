@@ -19,20 +19,19 @@ import 'package:video_trimmer/storage_dir.dart';
 /// * [videPlaybackControl()]
 /// * getThumbnail
 class Trimmer {
-  late final VideoPlayerController videoPlayerController;
+  final VideoPlayerController videoPlayerController;
   final File videoFile;
   late File currentVideoFile;
 
   final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
 
-  Trimmer(this.videoFile) {
-    videoPlayerController = VideoPlayerController.file(videoFile);
+  Trimmer(this.videoFile, this.videoPlayerController){
+    currentVideoFile = videoFile;
   }
 
   /// Loads a video using the path provided.
   /// Returns the loaded video file.
   Future<void> loadVideo() async {
-    currentVideoFile = videoFile;
     await videoPlayerController.initialize();
   }
 
