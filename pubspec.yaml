@@ -10,8 +10,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  video_player: ^2.1.1
-
   #https://pub.dev/packages/better_player
   better_player:
     git:

@@ -1,12 +1,12 @@
+import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 import 'package:video_trimmer/trim_editor.dart';
 
 class VideoViewer extends StatelessWidget {
   final Color borderColor;
   final double borderWidth;
   final EdgeInsets padding;
-  final VideoPlayerController videoPlayerController;
+  final BetterPlayerController betterPlayerController;
 
   /// For showing the video playback area.
   ///
@@ -24,7 +24,7 @@ class VideoViewer extends StatelessWidget {
   /// area. By default it is set to `EdgeInsets.all(0.0)`.
   ///
   VideoViewer(
-      this.videoPlayerController,{
+      this.betterPlayerController,{
     this.borderColor = Colors.transparent,
     this.borderWidth = 0.0,
     this.padding = const EdgeInsets.all(0.0),
@@ -33,12 +33,12 @@ class VideoViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return videoPlayerController!=null?Center(
+    return betterPlayerController.videoPlayerController!=null?Center(
       child: Padding(
         padding: padding,
         child: AspectRatio(
-          aspectRatio: videoPlayerController.value.aspectRatio,
-          child: videoPlayerController.value.isInitialized
+          aspectRatio: betterPlayerController.videoPlayerController!.value.aspectRatio,
+          child: betterPlayerController.videoPlayerController!.value.initialized
               ? Container(
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -46,7 +46,9 @@ class VideoViewer extends StatelessWidget {
                       color: borderColor,
                     ),
                   ),
-                  child: VideoPlayer(videoPlayerController),
+                  child: BetterPlayer(
+                    controller: betterPlayerController,
+                  ),
                 )
               : Container(
                   child: Center(

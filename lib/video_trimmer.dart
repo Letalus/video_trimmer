@@ -2,12 +2,12 @@ library video_trimmer;
 
 import 'dart:io';
 
+import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:video_player/video_player.dart';
 import 'package:video_trimmer/file_formats.dart';
 import 'package:video_trimmer/storage_dir.dart';
 
@@ -19,20 +19,20 @@ import 'package:video_trimmer/storage_dir.dart';
 /// * [videPlaybackControl()]
 /// * getThumbnail
 class Trimmer {
-  final VideoPlayerController videoPlayerController;
+  final BetterPlayerController betterVideoPlayer;
   final File videoFile;
   late File currentVideoFile;
 
   final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
 
-  Trimmer(this.videoFile, this.videoPlayerController){
+  Trimmer(this.videoFile, this.betterVideoPlayer){
     currentVideoFile = videoFile;
   }
 
   /// Loads a video using the path provided.
   /// Returns the loaded video file.
-  Future<void> loadVideo() async {
-    await videoPlayerController.initialize();
+  Future<void> loadVideo(BetterPlayerDataSource dataSource) async {
+    await betterVideoPlayer.setupDataSource(dataSource);
   }
 
   Future<String> _createFolderInAppDocDir(
@@ -264,16 +264,18 @@ class Trimmer {
     required double startValue,
     required double endValue,
   }) async {
-    if (videoPlayerController.value.isPlaying) {
-      await videoPlayerController.pause();
+    if(betterVideoPlayer.videoPlayerController==null)return false;
+
+    if (betterVideoPlayer.videoPlayerController!.value.isPlaying) {
+      await betterVideoPlayer.pause();
       return false;
     } else {
-      if (videoPlayerController.value.position.inMilliseconds >= endValue.toInt()) {
-        await videoPlayerController.seekTo(Duration(milliseconds: startValue.toInt()));
-        await videoPlayerController.play();
+      if (betterVideoPlayer.videoPlayerController!.value.position.inMilliseconds >= endValue.toInt()) {
+        await betterVideoPlayer.seekTo(Duration(milliseconds: startValue.toInt()));
+        await betterVideoPlayer.play();
         return true;
       } else {
-        await videoPlayerController.play();
+        await betterVideoPlayer.play();
         return true;
       }
     }
