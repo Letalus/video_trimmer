@@ -13,13 +13,13 @@ class TrimEditorPainter extends CustomPainter {
   final Color circlePaintColor;
   final Color scrubberPaintColor;
   final double borderRadius;
-  final VideoPlayerController videoPlayerController;
+  final VideoPlayerController? videoPlayerController;
   final double smallRectWidth;
 
   TrimEditorPainter(
-      {@required this.startPos,
-      @required this.endPos,
-      @required this.scrubberAnimationDx,
+      {required this.startPos,
+      required this.endPos,
+      required this.scrubberAnimationDx,
       this.circleSize = 0.5,
       this.borderWidth = 3,
       this.scrubberWidth = 1,
@@ -29,17 +29,7 @@ class TrimEditorPainter extends CustomPainter {
       this.scrubberPaintColor = Colors.white,
       this.videoPlayerController,
       this.borderRadius = 10,
-      this.smallRectWidth = 12})
-      : assert(startPos != null),
-        assert(endPos != null),
-        assert(scrubberAnimationDx != null),
-        assert(circleSize != null),
-        assert(borderWidth != null),
-        assert(scrubberWidth != null),
-        assert(showScrubber != null),
-        assert(borderPaintColor != null),
-        assert(circlePaintColor != null),
-        assert(scrubberPaintColor != null);
+      this.smallRectWidth = 12});
 
   @override
   void paint(Canvas canvas, Size size) {

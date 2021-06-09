@@ -27,7 +27,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-   Trimmer _trimmer;
+   Trimmer? _trimmer;
   
   double _startValue = 0.0;
   double _endValue = 0.0;
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     Future.delayed(Duration(seconds: 0),()async{
       _trimmer = Trimmer(_videoFile);
-      await _trimmer.loadVideo();
+      await _trimmer!.loadVideo();
       setState(() {
 
       });
@@ -73,18 +73,18 @@ class _HomePageState extends State<HomePage> {
                       ? null
                       : () async {
                       Future.delayed(Duration(milliseconds: 200),(){
-                        _trimmer?.videoPlayerController?.dispose();
+                        _trimmer?.videoPlayerController.dispose();
                       });
 
                     setState(() {
                       _trimmer = null;
                     });
-                    PickedFile pickedFile = await ImagePicker().getVideo(
+                    PickedFile? pickedFile = await ImagePicker().getVideo(
                       source: ImageSource.gallery,
                     );
                     if (pickedFile != null) {
                       _trimmer = Trimmer(File(pickedFile.path));
-                      await _trimmer.loadVideo();
+                      await _trimmer?.loadVideo();
                       setState(() {
 
                       });
@@ -98,11 +98,11 @@ class _HomePageState extends State<HomePage> {
                   child: Text("Get Other image"),
                 ),
                 Expanded(
-                  child: (_trimmer!=null&&_trimmer.videoPlayerController!=null)?VideoViewer(_trimmer.videoPlayerController):Container(),
+                  child: (_trimmer!=null&&_trimmer?.videoPlayerController!=null)?VideoViewer(_trimmer!.videoPlayerController):Container(),
                 ),
                 _trimmer!=null?Center(
                   child: TrimEditor(
-                    _trimmer,
+                    _trimmer!,
                     viewerHeight: 70.0,
                     viewerWidthMinusPadding: MediaQuery.of(context).size.width,
                     onChangeStart: (value) {
@@ -135,10 +135,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                   onPressed: () async {
                     bool playbackState =
-                    await _trimmer.videoPlaybackControl(
+                    (await _trimmer?.videoPlaybackControl(
                       startValue: _startValue,
                       endValue: _endValue,
-                    );
+                    ))??false;
                     setState(() {
                       _isPlaying = playbackState;
                     });
