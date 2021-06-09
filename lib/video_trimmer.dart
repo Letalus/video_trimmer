@@ -143,8 +143,6 @@ class Trimmer {
   /// video format is passed in [customVideoFormat], then the app may
   /// crash.
   ///
-  /// If videoPath is not null then videoFileName and videoPath will be ignored
-  ///
   Future<String> saveTrimmedVideo({
     @required double startValue,
     @required double endValue,
@@ -157,7 +155,6 @@ class Trimmer {
     String videoFolderName,
     String videoFileName,
     StorageDir storageDir,
-    String outputPath
   }) async {
     final String _videoPath = currentVideoFile.path;
     final String _videoName = basename(_videoPath).split('.')[0];
@@ -236,7 +233,7 @@ class Trimmer {
       _outputFormatString = customVideoFormat;
     }
 
-    _outputPath = outputPath??'$path$videoFileName$_outputFormatString';
+    _outputPath = '$path$videoFileName$_outputFormatString';
 
     _command += '"$_outputPath"';
 
