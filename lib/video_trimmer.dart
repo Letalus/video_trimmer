@@ -19,20 +19,20 @@ import 'package:video_trimmer/storage_dir.dart';
 /// * [videPlaybackControl()]
 /// * getThumbnail
 class Trimmer {
-  final BetterPlayerController betterVideoPlayer;
+  final BetterPlayerController betterPlayerController;
   final File videoFile;
   late File currentVideoFile;
 
   final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
 
-  Trimmer(this.videoFile, this.betterVideoPlayer){
+  Trimmer(this.videoFile, this.betterPlayerController){
     currentVideoFile = videoFile;
   }
 
   /// Loads a video using the path provided.
   /// Returns the loaded video file.
   Future<void> loadVideo(BetterPlayerDataSource dataSource) async {
-    await betterVideoPlayer.setupDataSource(dataSource);
+    await betterPlayerController.setupDataSource(dataSource);
   }
 
   Future<String> _createFolderInAppDocDir(
@@ -264,18 +264,18 @@ class Trimmer {
     required double startValue,
     required double endValue,
   }) async {
-    if(betterVideoPlayer.videoPlayerController==null)return false;
+    if(betterPlayerController.videoPlayerController==null)return false;
 
-    if (betterVideoPlayer.videoPlayerController!.value.isPlaying) {
-      await betterVideoPlayer.pause();
+    if (betterPlayerController.videoPlayerController!.value.isPlaying) {
+      await betterPlayerController.pause();
       return false;
     } else {
-      if (betterVideoPlayer.videoPlayerController!.value.position.inMilliseconds >= endValue.toInt()) {
-        await betterVideoPlayer.seekTo(Duration(milliseconds: startValue.toInt()));
-        await betterVideoPlayer.play();
+      if (betterPlayerController.videoPlayerController!.value.position.inMilliseconds >= endValue.toInt()) {
+        await betterPlayerController.seekTo(Duration(milliseconds: startValue.toInt()));
+        await betterPlayerController.play();
         return true;
       } else {
-        await betterVideoPlayer.play();
+        await betterPlayerController.play();
         return true;
       }
     }

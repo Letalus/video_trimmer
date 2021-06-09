@@ -139,7 +139,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
   late final AnimationController _animationController;
   late final Tween<double> _linearTween;
 
-  BetterPlayerController get betterPlayerController => widget.trimmer.betterVideoPlayer;
+  BetterPlayerController get betterPlayerController => widget.trimmer.betterPlayerController;
 
   @override
   void initState() {
