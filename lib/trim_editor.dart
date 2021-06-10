@@ -273,8 +273,6 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
   Future<void> _initializeVideoController() async {
     if (_videoFile != null) {
       await videoPlayerController.setVolume(1.0);
-      print(
-          'video duration is now: ${videoPlayerController.value.duration?.inMilliseconds}: is initialized: ${videoPlayerController.value.isInitialized}');
       _videoDuration = videoPlayerController.value.duration?.inMilliseconds ?? 10000;
 
       _videoEndPos = _videoDuration.toDouble();
@@ -282,19 +280,12 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
 
       videoPlayerController.addListener(() {
         final bool isPlaying = videoPlayerController.value.isPlaying;
-        print('isPlaying: $isPlaying');
-        print('currentPosition: ${videoPlayerController.value.position.inMilliseconds}');
-        print('videoEndPosition: $_videoEndPos');
-        print('_animationController.not animating: ${!_animationController.isAnimating}');
-        print('animationController value: ${_animationController.value}');
-        print('--------------------');
 
         if (isPlaying) {
           if (widget.onChangePlaybackState != null) widget.onChangePlaybackState(true);
           if (mounted)
             setState(() {
               _currentPosition = videoPlayerController.value.position.inMilliseconds;
-              print("CURRENT POS: $_currentPosition");
 
               if (_currentPosition > _videoEndPos.toInt()) {
                 if (widget.onChangePlaybackState != null) widget.onChangePlaybackState(false);
@@ -310,7 +301,6 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         } else {
           if (videoPlayerController.value.isInitialized) {
             if (_animationController != null) {
-              print('ANI VALUE: ${(_scrubberAnimation.value).toInt()} && END: ${(_endPos.dx).toInt()}');
               if ((_scrubberAnimation.value).toInt() == (_endPos.dx).toInt()) {
                 _animationController.reset();
               }
@@ -323,10 +313,6 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
-    print("UPDATE");
-    print("START POINT: ${_startPos.dx + details.delta.dx}");
-    print("END POINT: ${_endPos.dx + details.delta.dx}");
-    print("Duration: ${details.delta.dx}");
 
     _circleSize = widget.circleSizeOnDrag;
 
@@ -349,10 +335,6 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
   }
 
   void _onHorizontalDragStart(DragStartDetails details) {
-    print("START");
-    print(details.localPosition);
-    print((_startPos.dx - details.localPosition.dx).abs());
-    print((_endPos.dx - details.localPosition.dx).abs());
     if (_endPos.dx >= _startPos.dx) {
       if ((_startPos.dx - details.localPosition.dx).abs() > (_endPos.dx - details.localPosition.dx).abs()) {
         if(mounted)setState(() {
@@ -385,7 +367,6 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
       if(mounted)setState(() {
         _startPos += details.delta;
         _startFraction = (_startPos.dx / _thumbnailViewerW);
-        print("START PERCENT: $_startFraction");
         _videoStartPos = _videoDuration * _startFraction;
         if (widget.onChangeStart != null) widget.onChangeStart(_videoStartPos);
       });
@@ -404,7 +385,6 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
       if(mounted)setState(() {
         _endPos += details.delta;
         _endFraction = _endPos.dx / _thumbnailViewerW;
-        print("END PERCENT: $_endFraction");
         _videoEndPos = _videoDuration * _endFraction;
         if (widget.onChangeEnd != null) widget.onChangeEnd(_videoEndPos);
       });
