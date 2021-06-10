@@ -13,7 +13,6 @@ class TrimEditorPainter extends CustomPainter {
   final Color circlePaintColor;
   final Color scrubberPaintColor;
   final double borderRadius;
-  final VideoPlayerController videoPlayerController;
   final double smallRectWidth;
 
   TrimEditorPainter(
@@ -27,7 +26,6 @@ class TrimEditorPainter extends CustomPainter {
       this.borderPaintColor = Colors.white,
       this.circlePaintColor = Colors.white,
       this.scrubberPaintColor = Colors.white,
-      this.videoPlayerController,
       this.borderRadius = 10,
       this.smallRectWidth = 12})
       : assert(startPos != null),
@@ -86,7 +84,7 @@ class TrimEditorPainter extends CustomPainter {
     final _rightBackgroundRect = Rect.fromLTRB(size.width, 0, endPos.dx - smallRectWidth, endPos.dy);
 
     if (showScrubber) {
-      if (scrubberAnimationDx.toInt() > startPos.dx.toInt()) {
+      if (scrubberAnimationDx.toInt() >= startPos.dx.toInt()) {
         canvas.drawLine(
           Offset(scrubberAnimationDx, 0),
           Offset(scrubberAnimationDx, 0) + Offset(0, endPos.dy),

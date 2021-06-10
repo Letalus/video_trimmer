@@ -175,6 +175,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         );
 
         //Must be called because otherwise the controller keeps stuck and only switches between end and start point
+        _animationController.duration = Duration(milliseconds: (_videoEndPos - _videoStartPos).toInt());
         _animationController.reset();
       });
     });
@@ -254,8 +255,8 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
                   circleSize: _circleSize,
                   circlePaintColor: widget.circlePaintColor,
                   borderPaintColor: widget.borderPaintColor,
-                  scrubberPaintColor: widget.scrubberPaintColor,
-                  videoPlayerController: videoPlayerController),
+                  showScrubber: true,
+                  scrubberPaintColor: widget.scrubberPaintColor),
               child: Container(
                 color: Colors.grey[900],
                 height: _thumbnailViewerH,
@@ -281,6 +282,12 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
 
       videoPlayerController.addListener(() {
         final bool isPlaying = videoPlayerController.value.isPlaying;
+        print('isPlaying: $isPlaying');
+        print('currentPosition: ${videoPlayerController.value.position.inMilliseconds}');
+        print('videoEndPosition: $_videoEndPos');
+        print('_animationController.not animating: ${!_animationController.isAnimating}');
+        print('animationController value: ${_animationController.value}');
+        print('--------------------');
 
         if (isPlaying) {
           if (widget.onChangePlaybackState != null) widget.onChangePlaybackState(true);
@@ -295,7 +302,6 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
                 _animationController.stop();
               } else {
                 if (!_animationController.isAnimating) {
-                  print('is animating');
                   if (widget.onChangePlaybackState != null) widget.onChangePlaybackState(true);
                   _animationController.forward();
                 }

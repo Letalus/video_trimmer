@@ -48,7 +48,6 @@ class ThumbnailViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('thumbNailWidth factor ${(width/(thumbnailHeight*numberOfThumbnails))}');
     double _widthfactor = width/(thumbnailHeight*numberOfThumbnails);
     assert(_widthfactor>0, 'widthfactor must be greater than 0');
     return StreamBuilder(
@@ -77,7 +76,7 @@ class ThumbnailViewer extends StatelessWidget {
                               alignment: Alignment.center,
                             );
                           }catch (e){
-                            print('video trimmer bug in thumbnail_viewer.dart: $e');
+                            /*print('video trimmer bug in thumbnail_viewer.dart: $e');*/
                             return Container();
                           }
                         },

@@ -1,9 +1,9 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_ffmpeg (0.3.0):
+  - flutter_ffmpeg (0.4.0):
     - Flutter
-    - flutter_ffmpeg/https (= 0.3.0)
-  - flutter_ffmpeg/https (0.3.0):
+    - flutter_ffmpeg/https (= 0.4.0)
+  - flutter_ffmpeg/https (0.4.0):
     - Flutter
     - mobile-ffmpeg-https (= 4.4)
   - image_picker (0.0.1):
@@ -55,7 +55,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
-  flutter_ffmpeg: 657ce8a1502c3d25bf34efc58b380b248836f772
+  flutter_ffmpeg: bc8496ea20331e486cd29a03a3c6ff10d32db565
   image_picker: 50e7c7ff960e5f58faa4d1f4af84a771c671bc4a
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   mobile-ffmpeg-https: 311fc4a8f671cf36d1d6b8f421e8246b790978d9
