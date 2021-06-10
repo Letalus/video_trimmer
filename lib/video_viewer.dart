@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:video_trimmer/trim_editor.dart';
 
 class VideoViewer extends StatelessWidget {
   final Color borderColor;
@@ -33,7 +32,7 @@ class VideoViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return videoPlayerController!=null?Center(
+    return Center(
       child: Padding(
         padding: padding,
         child: AspectRatio(
@@ -57,6 +56,6 @@ class VideoViewer extends StatelessWidget {
                 ),
         ),
       ),
-    ):Container();
+    );
   }
 }

@@ -18,9 +18,9 @@ class TrimEditor extends StatefulWidget {
   final bool showDuration;
   final TextStyle durationTextStyle;
   final int numberOfThumbNail;
-  final Function(double startValue) onChangeStart;
-  final Function(double endValue) onChangeEnd;
-  final Function(bool isPlaying) onChangePlaybackState;
+  final Function(double startValue)? onChangeStart;
+  final Function(double endValue)? onChangeEnd;
+  final Function(bool isPlaying)? onChangePlaybackState;
   final Trimmer trimmer;
 
   /// Widget for displaying the video trimmer.
@@ -87,9 +87,9 @@ class TrimEditor extends StatefulWidget {
   ///
   TrimEditor(
     this.trimmer, {
-    Key key,
-    @required this.viewerWidthMinusPadding,
-    @required this.viewerHeight,
+    Key? key,
+    required this.viewerWidthMinusPadding,
+    required this.viewerHeight,
     this.circleSize = 5.0,
     this.circleSizeOnDrag = 8.0,
     this.circlePaintColor = Colors.white,
@@ -104,24 +104,14 @@ class TrimEditor extends StatefulWidget {
     this.onChangeStart,
     this.onChangeEnd,
     this.onChangePlaybackState,
-  })  : assert(viewerWidthMinusPadding != null),
-        assert(viewerHeight != null),
-        assert(circleSize != null),
-        assert(circleSizeOnDrag != null),
-        assert(circlePaintColor != null),
-        assert(borderPaintColor != null),
-        assert(scrubberPaintColor != null),
-        assert(thumbnailQuality != null),
-        assert(showDuration != null),
-        assert(durationTextStyle != null),
-        super(key: key);
+  })  :super(key: key);
 
   @override
   _TrimEditorState createState() => _TrimEditorState();
 }
 
 class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
-  File _videoFile;
+  File? _videoFile;
 
   double _videoStartPos = 0.0;
   double _videoEndPos = 0.0;
@@ -141,13 +131,13 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
   double _thumbnailViewerW = 0.0;
   double _thumbnailViewerH = 0.0;
 
-  double _circleSize;
+  late double _circleSize;
 
-  ThumbnailViewer thumbnailWidget;
+  ThumbnailViewer? thumbnailWidget;
 
-  Animation<double> _scrubberAnimation;
-  AnimationController _animationController;
-  Tween<double> _linearTween;
+  late Animation<double> _scrubberAnimation;
+  late AnimationController _animationController;
+  late Tween<double> _linearTween;
 
   VideoPlayerController get videoPlayerController => widget.trimmer.videoPlayerController;
 
@@ -273,39 +263,37 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
   Future<void> _initializeVideoController() async {
     if (_videoFile != null) {
       await videoPlayerController.setVolume(1.0);
-      _videoDuration = videoPlayerController.value.duration?.inMilliseconds ?? 10000;
+      _videoDuration = videoPlayerController.value.duration.inMilliseconds;
 
       _videoEndPos = _videoDuration.toDouble();
-      if (widget.onChangeEnd != null) widget.onChangeEnd(_videoEndPos);
+      if (widget.onChangeEnd != null) widget.onChangeEnd!(_videoEndPos);
 
       videoPlayerController.addListener(() {
         final bool isPlaying = videoPlayerController.value.isPlaying;
 
         if (isPlaying) {
-          if (widget.onChangePlaybackState != null) widget.onChangePlaybackState(true);
+          if (widget.onChangePlaybackState != null) widget.onChangePlaybackState!(true);
           if (mounted)
             setState(() {
               _currentPosition = videoPlayerController.value.position.inMilliseconds;
 
               if (_currentPosition > _videoEndPos.toInt()) {
-                if (widget.onChangePlaybackState != null) widget.onChangePlaybackState(false);
+                if (widget.onChangePlaybackState != null) widget.onChangePlaybackState!(false);
                 videoPlayerController.pause();
                 _animationController.stop();
               } else {
                 if (!_animationController.isAnimating) {
-                  if (widget.onChangePlaybackState != null) widget.onChangePlaybackState(true);
+                  if (widget.onChangePlaybackState != null) widget.onChangePlaybackState!(true);
                   _animationController.forward();
                 }
               }
             });
         } else {
           if (videoPlayerController.value.isInitialized) {
-            if (_animationController != null) {
               if ((_scrubberAnimation.value).toInt() == (_endPos.dx).toInt()) {
                 _animationController.reset();
               }
               _animationController.stop();
-            }
           }
         }
       });
@@ -368,7 +356,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         _startPos += details.delta;
         _startFraction = (_startPos.dx / _thumbnailViewerW);
         _videoStartPos = _videoDuration * _startFraction;
-        if (widget.onChangeStart != null) widget.onChangeStart(_videoStartPos);
+        if (widget.onChangeStart != null) widget.onChangeStart!(_videoStartPos);
       });
       await videoPlayerController.pause();
       await videoPlayerController.seekTo(Duration(milliseconds: _videoStartPos.toInt()));
@@ -386,7 +374,7 @@ class _TrimEditorState extends State<TrimEditor> with TickerProviderStateMixin {
         _endPos += details.delta;
         _endFraction = _endPos.dx / _thumbnailViewerW;
         _videoEndPos = _videoDuration * _endFraction;
-        if (widget.onChangeEnd != null) widget.onChangeEnd(_videoEndPos);
+        if (widget.onChangeEnd != null) widget.onChangeEnd!(_videoEndPos);
       });
       await videoPlayerController.pause();
       await videoPlayerController.seekTo(Duration(milliseconds: _videoEndPos.toInt()));
