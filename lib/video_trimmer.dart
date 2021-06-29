@@ -211,14 +211,11 @@ class Trimmer {
       _outputFormatString = outputFormat.toString();
     }
 
-    String _trimLengthCommand = ' -ss $startPoint -i "$_videoPath" -t ${endPoint - startPoint} -avoid_negative_ts make_zero ';
+    String _trimLengthCommand = ' -ss $startPoint -i "$_videoPath" -c:v copy  -c:a aac -movflags +faststart -t ${endPoint - startPoint} -avoid_negative_ts make_zero ';
 
     if (ffmpegCommand == null) {
-      _command = '$_trimLengthCommand -c:a aac -movflags +faststart ';
+      _command = _trimLengthCommand;
 
-      if (!applyVideoEncoding) {
-        _command += '-c:v copy ';
-      }
 
       if (outputFormat == FileFormat.gif) {
         if (fpsGIF == null) {
