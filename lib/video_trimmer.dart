@@ -214,7 +214,7 @@ class Trimmer {
     String _trimLengthCommand = ' -ss $startPoint -i "$_videoPath" -t ${endPoint - startPoint} -avoid_negative_ts make_zero ';
 
     if (ffmpegCommand == null) {
-      _command = '$_trimLengthCommand -c:a copy ';
+      _command = '$_trimLengthCommand -c:a aac -movflags +faststart ';
 
       if (!applyVideoEncoding) {
         _command += '-c:v copy ';
@@ -238,6 +238,8 @@ class Trimmer {
     _outputPath = '$path$videoFileName$_outputFormatString';
 
     _command += '"$_outputPath"';
+
+    print('command: $_command');
 
     await _flutterFFmpeg.execute(_command).whenComplete(() {
       print('Got value');
