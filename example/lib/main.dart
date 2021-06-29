@@ -27,36 +27,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-   Trimmer? _trimmer;
-  
+  Trimmer? _trimmer;
+
   double _startValue = 0.0;
   double _endValue = 0.0;
 
   bool _isPlaying = false;
   bool _progressVisibility = false;
   File _videoFile = File('/data/user/0/com.example.example/cache/image_picker1717731443242073867.jpg');
-  
+
   @override
   void initState() {
     super.initState();
-    /*Future.delayed(Duration(seconds: 0),()async{
+    Future.delayed(Duration(seconds: 0), () async {
       _trimmer = Trimmer(_videoFile);
       await _trimmer!.loadVideo();
-      setState(() {
-
+      setState(() {});
+      Future.delayed(Duration(milliseconds: 300), () {
+        setState(() {});
       });
-      Future.delayed(Duration(milliseconds: 300),(){
-        setState(() {
-
-        });
-      });
-    });*/
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
-    /*return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text("Video Trimmer"),
       ),
@@ -73,73 +68,75 @@ class _HomePageState extends State<HomePage> {
                   onPressed: _progressVisibility
                       ? null
                       : () async {
-                      Future.delayed(Duration(milliseconds: 200),(){
-                        _trimmer?.videoPlayerController.dispose();
-                      });
+                          Future.delayed(Duration(milliseconds: 200), () {
+                            _trimmer?.videoPlayerController.dispose();
+                          });
 
-                    setState(() {
-                      _trimmer = null;
-                    });
-                    PickedFile? pickedFile = await ImagePicker().getVideo(
-                      source: ImageSource.gallery,
-                    );
-                    if (pickedFile != null) {
-                      _trimmer = Trimmer(File(pickedFile.path));
-                      await _trimmer?.loadVideo();
-                      setState(() {
-
-                      });
-                      Future.delayed(Duration(milliseconds: 300),(){
-                        setState(() {
-
-                        });
-                      });
-                    }
-                  },
+                          setState(() {
+                            _trimmer = null;
+                          });
+                          PickedFile? pickedFile = await ImagePicker().getVideo(
+                            source: ImageSource.gallery,
+                          );
+                          if (pickedFile != null) {
+                            _trimmer = Trimmer(File(pickedFile.path));
+                            await _trimmer!.loadVideo();
+                            setState(() {});
+                            Future.delayed(Duration(milliseconds: 300), () {
+                              setState(() {});
+                            });
+                          }
+                        },
                   child: Text("Get Other image"),
                 ),
                 Expanded(
-                  child: (_trimmer!=null&&_trimmer?.videoPlayerController!=null)?VideoViewer(_trimmer!.videoPlayerController):Container(),
+                  child: (_trimmer != null && _trimmer?.videoPlayerController != null)
+                      ? VideoViewer(_trimmer!.videoPlayerController)
+                      : Container(),
                 ),
-                _trimmer!=null?Center(
-                  child: TrimEditor(
-                    _trimmer!,
-                    viewerHeight: 70.0,
-                    viewerWidthMinusPadding: MediaQuery.of(context).size.width,
-                    onChangeStart: (value) {
-                      _startValue = value;
-                    },
-                    onChangeEnd: (value) {
-                      _endValue = value;
-                    },
-                    onChangePlaybackState: (value) {
-                      if(context!=null){
-                        setState(() {
-                          _isPlaying = value;
-                        });
-
-                      }
-                    },
-                  ),
-                ):Container(),
+                _trimmer != null
+                    ? Center(
+                        child: TrimEditor(
+                          _trimmer!,
+                          viewerHeight: 70.0,
+                          viewerWidthMinusPadding: MediaQuery.of(context).size.width,
+                          onChangeStart: (value) {
+                            _startValue = value;
+                          },
+                          onChangeEnd: (value) {
+                            _endValue = value;
+                          },
+                          onChangePlaybackState: (value) {
+                            if (mounted) {
+                              setState(() {
+                                _isPlaying = value;
+                              });
+                            }
+                          },
+                        ),
+                      )
+                    : Container(),
                 FlatButton(
                   child: _isPlaying
                       ? Icon(
-                    Icons.pause,
-                    size: 80.0,
-                    color: Colors.white,
-                  )
+                          Icons.pause,
+                          size: 80.0,
+                          color: Colors.white,
+                        )
                       : Icon(
-                    Icons.play_arrow,
-                    size: 80.0,
-                    color: Colors.white,
-                  ),
+                          Icons.play_arrow,
+                          size: 80.0,
+                          color: Colors.white,
+                        ),
                   onPressed: () async {
-                    bool playbackState =
-                    (await _trimmer?.videoPlaybackControl(
+                    if(_trimmer==null){
+                      print('playback cant be activated because the trimmer must no be null');
+                      return;
+                    }
+                    bool playbackState = await _trimmer!.videoPlaybackControl(
                       startValue: _startValue,
                       endValue: _endValue,
-                    ))??false;
+                    );
                     setState(() {
                       _isPlaying = playbackState;
                     });
@@ -150,7 +147,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-    );*/
+    );
   }
 }
-

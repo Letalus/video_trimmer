@@ -48,7 +48,7 @@ class ThumbnailViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     double _widthfactor = width/(thumbnailHeight*numberOfThumbnails);
     assert(_widthfactor>0, 'widthfactor must be greater than 0');
-    return StreamBuilder(
+    return StreamBuilder<List<Uint8List?>>(
       stream: generateThumbnail(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {

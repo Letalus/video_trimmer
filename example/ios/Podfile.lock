@@ -1,4 +1,8 @@
 PODS:
+  - better_player (0.0.1):
+    - Flutter
+    - KTVHTTPCache (~> 2.0.0)
+  - CocoaAsyncSocket (7.6.5)
   - Flutter (1.0.0)
   - flutter_ffmpeg (0.4.0):
     - Flutter
@@ -8,6 +12,10 @@ PODS:
     - mobile-ffmpeg-https (= 4.4)
   - image_picker (0.0.1):
     - Flutter
+  - KTVCocoaHTTPServer (1.0.0):
+    - CocoaAsyncSocket
+  - KTVHTTPCache (2.0.1):
+    - KTVCocoaHTTPServer
   - libwebp (1.1.0):
     - libwebp/demux (= 1.1.0)
     - libwebp/mux (= 1.1.0)
@@ -25,21 +33,30 @@ PODS:
   - video_thumbnail (0.0.1):
     - Flutter
     - libwebp
+  - wakelock (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
+  - better_player (from `.symlinks/plugins/better_player/ios`)
   - Flutter (from `Flutter`)
   - flutter_ffmpeg (from `.symlinks/plugins/flutter_ffmpeg/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
+  - wakelock (from `.symlinks/plugins/wakelock/ios`)
 
 SPEC REPOS:
   trunk:
+    - CocoaAsyncSocket
+    - KTVCocoaHTTPServer
+    - KTVHTTPCache
     - libwebp
     - mobile-ffmpeg-https
 
 EXTERNAL SOURCES:
+  better_player:
+    :path: ".symlinks/plugins/better_player/ios"
   Flutter:
     :path: Flutter
   flutter_ffmpeg:
@@ -52,16 +69,23 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_player/ios"
   video_thumbnail:
     :path: ".symlinks/plugins/video_thumbnail/ios"
+  wakelock:
+    :path: ".symlinks/plugins/wakelock/ios"
 
 SPEC CHECKSUMS:
+  better_player: a4383402f457e53720525888c0fc5d337ef6ba11
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_ffmpeg: bc8496ea20331e486cd29a03a3c6ff10d32db565
-  image_picker: 50e7c7ff960e5f58faa4d1f4af84a771c671bc4a
+  image_picker: e06f7a68f000bd36f552c1847e33cda96ed31f1f
+  KTVCocoaHTTPServer: df8d7b861e603ff8037e9b2138aca2563a6b768d
+  KTVHTTPCache: 588c3eb16f6bd1e6fde1e230dabfb7bd4e490a4d
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   mobile-ffmpeg-https: 311fc4a8f671cf36d1d6b8f421e8246b790978d9
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
+  wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
 
 PODFILE CHECKSUM: ac7a62a7123da1919fb2cedd3fee18db5a7b9f54
 
