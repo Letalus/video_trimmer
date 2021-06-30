@@ -158,7 +158,8 @@ class Trimmer {
     if(currentVideoFile==null){
       throw('no currentVideoFile initialized. Will return function until function load() has been called on trimmer');
     }
-    final String _videoPath = currentVideoFile!.path;
+
+    final String _videoPath = await convertMovToMp4(currentVideoFile!.path, videoFolderName??'Trimmer');
     final String _videoName = basename(_videoPath).split('.')[0];
 
     String _command;
@@ -249,6 +250,44 @@ class Trimmer {
     });
 
     return _outputPath;
+  }
+
+  Future<String> convertMovToMp4(String inputPath,String videoFolderName,  {StorageDir? storageDir})async{
+    String dateTime = DateFormat.yMMMd()
+        .addPattern('-')
+        .add_Hms()
+        .format(DateTime.now())
+        .toString();
+
+    // String _resultString;
+    String _outputPath;
+    String _outputFormatString = '.mp4';
+    String formattedDateTime = dateTime.replaceAll(' ', '');
+
+    String path = await _createFolderInAppDocDir(
+      videoFolderName,
+      storageDir,
+    ).whenComplete(
+          () => print("Retrieved Trimmer folder"),
+    );
+
+    final videoFileName = "converted_to_mp4_$formattedDateTime";
+    _outputPath = '$path$videoFileName$_outputFormatString';
+
+    String _command = '-i $inputPath -qscale 0 $_outputPath';
+
+    await _flutterFFmpeg.execute(_command).whenComplete(() {
+      print('Got value');
+      debugPrint('Video successfuly saved');
+      // _resultString = 'Video successfuly saved';
+    }).catchError((error) {
+      print('Error');
+      // _resultString = 'Couldn\'t save the video';
+      debugPrint('Couldn\'t save the video');
+    });
+
+    return _outputPath;
+
   }
 
   /// For getting the video controller state, to know whether the
