@@ -11,9 +11,11 @@ packages:
   better_player:
     dependency: transitive
     description:
-      name: better_player
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: expose_event_listener
+      resolved-ref: "0d368726287445a64549762e8a835110adf4b1c9"
+      url: "https://github.com/Letalus/betterplayer.git"
+    source: git
     version: "0.0.70"
   boolean_selector:
     dependency: transitive
