@@ -13,10 +13,7 @@ dependencies:
   video_player: ^2.1.1
 
   #https://pub.dev/packages/better_player
-  better_player:
-    git:
-      url: https://github.com/Letalus/betterplayer.git
-      ref: android_load_buffer_implementation
+  better_player: ^0.0.70
   video_thumbnail: ^0.3.3
   path_provider: ^2.0.1
   intl: ^0.17.0
