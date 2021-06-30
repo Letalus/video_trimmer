@@ -11,12 +11,10 @@ packages:
   better_player:
     dependency: transitive
     description:
-      path: "."
-      ref: android_load_buffer_implementation
-      resolved-ref: "703e3b6906bf613a9c79491026c1bef4436f3bef"
-      url: "https://github.com/Letalus/betterplayer.git"
-    source: git
-    version: "0.0.69"
+      name: better_player
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.70"
   boolean_selector:
     dependency: transitive
     description:
