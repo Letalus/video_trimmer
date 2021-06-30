@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
 import 'package:video_trimmer/trim_editor.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 import 'package:video_trimmer/video_viewer.dart';
@@ -116,31 +117,38 @@ class _HomePageState extends State<HomePage> {
                         ),
                       )
                     : Container(),
-                FlatButton(
-                  child: _isPlaying
-                      ? Icon(
-                          Icons.pause,
-                          size: 80.0,
-                          color: Colors.white,
-                        )
-                      : Icon(
-                          Icons.play_arrow,
-                          size: 80.0,
-                          color: Colors.white,
-                        ),
-                  onPressed: () async {
-                    if(_trimmer==null){
-                      print('playback cant be activated because the trimmer must no be null');
-                      return;
-                    }
-                    bool playbackState = await _trimmer!.videoPlaybackControl(
-                      startValue: _startValue,
-                      endValue: _endValue,
-                    );
-                    setState(() {
-                      _isPlaying = playbackState;
-                    });
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FlatButton(
+                      child: _isPlaying
+                          ? Icon(
+                              Icons.pause,
+                              size: 80.0,
+                              color: Colors.white,
+                            )
+                          : Icon(
+                              Icons.play_arrow,
+                              size: 80.0,
+                              color: Colors.white,
+                            ),
+                      onPressed: () async {
+                        if(_trimmer==null){
+                          print('playback cant be activated because the trimmer must no be null');
+                          return;
+                        }
+                        bool playbackState = await _trimmer!.videoPlaybackControl(
+                          startValue: _startValue,
+                          endValue: _endValue,
+                        );
+                        setState(() {
+                          _isPlaying = playbackState;
+                        });
+                      },
+                    ),
+                    SizedBox(width: 100,),
+                    FlatButton(onPressed: ()=>_trimAndShowVideo(context), child: Icon(Icons.cut, size: 50, color: Colors.white,))
+                  ],
                 )
               ],
             ),
@@ -148,5 +156,43 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void _trimAndShowVideo(BuildContext context)async{
+
+      if(_trimmer==null){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Trimmer is null', style: TextStyle(color: Colors.white),)));
+      }
+
+      final cutPath = await _trimmer!.saveTrimmedVideo(startValue: _startValue, endValue: _endValue);
+
+      if(!File(cutPath).existsSync()){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Trimmed video file does not exist', style: TextStyle(color: Colors.white),)));
+      }
+
+      if(File(cutPath).lengthSync()==0){
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Video was not trimmed correctly', style: TextStyle(color: Colors.white),)));
+      }
+
+      VideoPlayerController _controller = VideoPlayerController.file(File(cutPath), videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true));
+      await _controller.initialize();
+      _controller.play();
+
+      await showDialog(context: context, builder: (context)=>SizedBox(
+        height: MediaQuery.of(context).size.height*.7,
+        child: Column(
+          children: [
+            Expanded(
+              child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoViewer(
+                    _controller
+                ),
+              ),
+            ),
+          ],
+        ),
+      ));
+
   }
 }
